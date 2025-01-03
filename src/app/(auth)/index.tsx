@@ -1,9 +1,14 @@
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Feather from '@expo/vector-icons/Feather';
+import { router } from "expo-router";
 
 const AuthHomeScreen = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
   return (
     <SafeAreaView className="flex-1 bg-[#1e1e1e] justify-center items-center px-8">
       <Text className="text-2xl text-white font-semibold">
