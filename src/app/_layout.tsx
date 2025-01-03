@@ -14,7 +14,7 @@ const RootLayout = () => {
         backgroundColor="transparent"
       />
       <Stack screenOptions={{ headerShown: false }} />
-      {<Redirect href="/(auth)" />}
+      {<Redirect href="/(auth)/signUp" />}
     </>
   )
 }
