@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import Event from "@/src/components/profileScreens/Event";
 import Task from "@/src/components/profileScreens/Task";
 import Invites from "@/src/components/profileScreens/Invites";
+import getInitialLetter from "@/src/utils/initialLetter";
 
 const profile = () => {
   const [selectedSection, setSelectedSection] = useState("event");
@@ -23,17 +24,6 @@ const profile = () => {
       return data;
     },
   });
-
-  const getInitialLetter = (fullName: any) => {
-    if (!fullName) return "";
-    const nameParts = fullName.split(" ");
-    return nameParts.length === 1
-      ? fullName.slice(0, 2).toUpperCase()
-      : nameParts
-          .map((name: any) => name[0])
-          .join("")
-          .toUpperCase();
-  };
 
   const userNameInitials = useMemo(
     () => getInitialLetter(userData?.full_name),
