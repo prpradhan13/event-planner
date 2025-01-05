@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   AppState,
   KeyboardAvoidingView,
   Text,
@@ -13,6 +14,7 @@ import { Link, router } from "expo-router";
 import { supabase } from "@/src/utils/supabase";
 import { validateSignIn } from "@/src/validation/authValidation";
 import { z } from "zod";
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 AppState.addEventListener("change", (state) => {
   if (state === "active") {
@@ -57,11 +59,11 @@ const LoginScreen = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#1e1e1e] justify-center items-center px-8">
+    <SafeAreaView className="flex-1 bg-MainBackgroundColor justify-center items-center px-8">
       <Text className="text-2xl text-white font-semibold">
         Login to your Account
       </Text>
-      <Text className="text-sm text-[#dadada] font-semibold text-center mt-6">
+      <Text className="text-sm text-[#dadada] font-semibold text-center mt-5">
         Get started with our app, just create an account and enjoy the
         experience.
       </Text>
@@ -102,27 +104,31 @@ const LoginScreen = () => {
 
         <TouchableOpacity
           onPress={handleSignIn}
-          className="bg-blue-500 p-3 rounded-lg mt-5"
+          disabled={loading}
+          className={`${loading ? "bg-blue-400": "bg-blue-500"} p-3 rounded-lg mt-5`}
         >
-          <Text className="text-center font-medium text-white text-lg">
-            {" "}
-            Sign In{" "}
-          </Text>
+          {loading ? (
+            <ActivityIndicator size={26} color="white" />
+          ) : (
+            <Text className="text-center font-medium text-white text-lg">
+              Sign In
+            </Text>
+          )}
         </TouchableOpacity>
       </View>
 
       <View className="my-5 flex-row items-center">
-        <View className="bg-[#5e5e5e] h-[2px] w-[46%]"></View>
+        <View className="bg-[#5e5e5e] h-[1px] w-[46%]"></View>
         <Text className="text-[#dfdfdf] text-xl"> Or </Text>
-        <View className="bg-[#5e5e5e] h-[2px] w-[46%]"></View>
+        <View className="bg-[#5e5e5e] h-[1px] w-[46%]"></View>
       </View>
 
       <Link href="/(auth)/signUp" className="text-blue-500 mb-5 font-medium">
-        {" "}
-        Create an account?{" "}
+        Create an account?
       </Link>
 
-      <TouchableOpacity className="border border-[#e8e8e8] w-full p-3 rounded-lg">
+      <TouchableOpacity className="flex-row gap-3 justify-center items-center border border-[#e8e8e8] w-full p-3 rounded-lg">
+        <FontAwesome name="google" size={24} color="#e8e8e8" />
         <Text className="text-[#e8e8e8] text-center font-medium">
           Sign In with Google
         </Text>

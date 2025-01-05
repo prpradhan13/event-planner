@@ -6,7 +6,19 @@ import { useAuth } from "@/src/context/AuthProvider";
 
 const TabLayout = () => {
   return (
-    <Tabs screenOptions={{ headerShown: false }}>
+    <Tabs 
+      screenOptions={{ 
+        headerShown: false,
+        tabBarActiveTintColor: "white",
+        tabBarStyle: {
+          position: "absolute",
+          bottom: 0,
+          shadowColor: "transparent",
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          borderTopWidth: 0,
+        }
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
@@ -15,7 +27,7 @@ const TabLayout = () => {
             <FontAwesome
               name="home"
               size={26}
-              color={focused ? "#2A2A2A" : "#FAD4D4"}
+              color={focused ? "white" : "#ababab"}
             />
           ),
         }}
@@ -28,7 +40,7 @@ const TabLayout = () => {
             <FontAwesome
               name="user"
               size={26}
-              color={focused ? "#2A2A2A" : "#FAD4D4"}
+              color={focused ? "white" : "#ababab"}
             />
           ),
         }}
