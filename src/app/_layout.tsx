@@ -1,22 +1,18 @@
 import "@/src/global.css";
-import { Redirect, Stack, useRouter, useSegments } from "expo-router";
-import React, { useEffect, useState } from "react";
+import { Stack } from "expo-router";
+import React from "react";
 import { StatusBar } from "expo-status-bar";
-import { ActivityIndicator, View } from "react-native";
+import AuthProvider, { useAuth } from "@/src/context/AuthProvider";
 
 const RootLayout = () => {
-
   return (
-    <>
-      <StatusBar
-        style={"light"}
-        translucent={true}
-        backgroundColor="transparent"
-      />
-      <Stack screenOptions={{ headerShown: false }} />
-      {<Redirect href="/(auth)/signUp" />}
-    </>
-  )
-}
+    <AuthProvider>
+      <StatusBar style="light" translucent backgroundColor="transparent" />
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(main)" />
+      </Stack>
+    </AuthProvider>
+  );
+};
 
 export default RootLayout;

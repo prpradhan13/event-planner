@@ -1,4 +1,5 @@
 import {
+  AppState,
   StyleSheet,
   Text,
   TextInput,
@@ -11,6 +12,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { z } from "zod";
 import { validateSignIn } from "@/src/validation/authValidation";
 import { supabase } from "@/src/utils/supabase";
+import { Stack } from "expo-router";
+
+AppState.addEventListener('change', (state) => {
+  if (state === 'active') {
+    supabase.auth.startAutoRefresh()
+  } else {
+    supabase.auth.stopAutoRefresh()
+  }
+})
 
 const signUp = () => {
   const [email, setEmail] = useState("");
@@ -22,6 +32,7 @@ const signUp = () => {
 
     try {
       validateSignIn({ email, password });
+      
       const {
         data: { session },
         error,
@@ -53,6 +64,7 @@ const signUp = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-[#1e1e1e] justify-center items-center px-8">
+      <Stack.Screen options={{ title: "Sign up" }} />
       <Text className="text-2xl text-white font-semibold">
         Login to your Account
       </Text>
