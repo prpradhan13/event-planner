@@ -8,6 +8,7 @@ import Event from "@/src/components/profileScreens/Event";
 import Task from "@/src/components/profileScreens/Task";
 import Invites from "@/src/components/profileScreens/Invites";
 import getInitialLetter from "@/src/utils/initialLetter";
+import { LinearGradient } from "expo-linear-gradient";
 
 const profile = () => {
   const [selectedSection, setSelectedSection] = useState("event");
@@ -43,11 +44,14 @@ const profile = () => {
       <View className="justify-center items-center mt-5">
         {/* Rounded Box */}
         <View className="w-full justify-center items-center">
-          <View className="bg-white h-28 w-28 rounded-full justify-center items-center">
-            <Text className="font-semibold text-2xl tracking-widest">
+          <LinearGradient
+            colors={["#333333", "#000000"]}
+            className="bg-white h-28 w-28 rounded-full justify-center items-center overflow-hidden"
+          >
+            <Text className="font-semibold text-2xl tracking-widest text-white">
               {userNameInitials}
             </Text>
-          </View>
+          </LinearGradient>
         </View>
 
         {/* User Detatils */}
@@ -113,17 +117,11 @@ const profile = () => {
         </View>
 
         <View className="w-full">
-          {selectedSection === "event" && (
-            <Event />
-          )}
+          {selectedSection === "event" && <Event />}
 
-          {selectedSection === "task" && (
-            <Task />
-          )}
+          {selectedSection === "task" && <Task />}
 
-          {selectedSection === "invite" && (
-            <Invites />
-          )}
+          {selectedSection === "invite" && <Invites />}
         </View>
       </View>
     </SafeAreaView>
