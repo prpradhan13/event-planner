@@ -7,9 +7,9 @@ module.exports = {
     extend: {
       colors: {
         MainBackgroundColor: "#1e1e1e",
-        SecondaryBackgroundColor: "",
-        PrimaryTextColor: "",
-        SecondaryTextColor: "",
+        SecondaryBackgroundColor: "#2a2a2a",
+        PrimaryTextColor: "#eee",
+        SecondaryTextColor: "#c8c8c8",
         BorderColor: "",
       }
     },

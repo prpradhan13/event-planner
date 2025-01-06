@@ -46,7 +46,7 @@ const profile = () => {
         <View className="w-full justify-center items-center">
           <LinearGradient
             colors={["#333333", "#000000"]}
-            className="bg-white h-28 w-28 rounded-full justify-center items-center overflow-hidden"
+            className="h-28 w-28 rounded-full justify-center items-center overflow-hidden"
           >
             <Text className="font-semibold text-2xl tracking-widest text-white">
               {userNameInitials}
