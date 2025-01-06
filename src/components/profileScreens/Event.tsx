@@ -27,13 +27,19 @@ const Event = () => {
   }
 
   return (
-    <FlatList
-      data={data}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => (
-        <EventCard dataList={item} />
-      )}
-    />
+    <View className="px-4">
+      <FlatList
+        data={data}
+        keyExtractor={(item) => item.id.toString()}
+        contentContainerStyle={{
+          paddingVertical: 16,
+          gap: 16
+        }}
+        renderItem={({ item }) => (
+          <EventCard dataList={item} />
+        )}
+      />
+    </View>
   );
 };
 
