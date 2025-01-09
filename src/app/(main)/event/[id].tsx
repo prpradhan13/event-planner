@@ -10,6 +10,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import dayjs from "dayjs";
 import Entypo from "@expo/vector-icons/Entypo";
 import Mapview, { Marker } from "react-native-maps";
+import TotalGuests from "@/src/components/smallHelping/TotalGuests";
 
 const SingleEvent = () => {
   const { id } = useLocalSearchParams();
@@ -59,28 +60,29 @@ const SingleEvent = () => {
           {singleEventData?.description}
         </Text>
 
-        <View className="rounded-xl">
-          <Mapview
-            style={{
-              height: 200,
-              marginTop: 20,
-            }}
-            initialRegion={{
+        <TotalGuests eventId={singleEventData?.id} />
+      </View>
+
+      <View className="rounded-xl mt-5">
+        <Mapview
+          style={{
+            height: 200,
+          }}
+          initialRegion={{
+            latitude: Number(singleEventData?.latitude),
+            longitude: Number(singleEventData?.longitude),
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        >
+          <Marker
+            coordinate={{
               latitude: Number(singleEventData?.latitude),
               longitude: Number(singleEventData?.longitude),
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
             }}
-          >
-            <Marker
-              coordinate={{
-                latitude: Number(singleEventData?.latitude),
-                longitude: Number(singleEventData?.longitude),
-              }}
-              pinColor="red"
-            />
-          </Mapview>
-        </View>
+            pinColor="red"
+          />
+        </Mapview>
       </View>
     </View>
   );

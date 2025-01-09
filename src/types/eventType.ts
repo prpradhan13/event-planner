@@ -38,3 +38,18 @@ export type InviteType = {
 export type InvitesListItemProps = {
     inviteList: InviteType;
 }
+
+export type GuestsType = {
+    id: string;
+    event_id: number;
+    guest_id: string;
+    status: string;
+}
+
+export type GuestDetailsType = {
+    id: string;
+    email: string;
+    full_name: string;
+    username: string;
+    avatar_url?: string;
+}
