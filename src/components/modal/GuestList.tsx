@@ -32,6 +32,7 @@ const GuestList = ({
           <FlatList
             data={data}
             keyExtractor={(item) => item.id.toString()}
+            showsVerticalScrollIndicator={false}
             contentContainerStyle={{
               gap: 10,
               paddingVertical: 10,

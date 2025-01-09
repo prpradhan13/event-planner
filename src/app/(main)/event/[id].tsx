@@ -11,23 +11,17 @@ import dayjs from "dayjs";
 import Entypo from "@expo/vector-icons/Entypo";
 import Mapview, { Marker } from "react-native-maps";
 import TotalGuests from "@/src/components/smallHelping/TotalGuests";
+import { singleEventDetails } from "@/src/utils/quries/eventQurery";
 
 const SingleEvent = () => {
   const { id } = useLocalSearchParams();
+  const singleId = Array.isArray(id) ? id[0] : id;
 
-  const { user } = useAuth();
-
-  const { data: eventData, isLoading } = useQuery<EventsType[]>({
-    queryKey: user?.id ? [`events_${user.id}`] : ["events"],
-  });
-
-  const singleEventData = useMemo(() => {
-    return eventData?.find((event) => event.id.toString() === id);
-  }, [eventData, id]);
+  const { data, isLoading } = singleEventDetails(singleId)
 
   const eventInitialLetter = useMemo(
-    () => getInitialLetter(singleEventData?.name),
-    [singleEventData?.name]
+    () => getInitialLetter(data?.name),
+    [data?.name]
   );
 
   if (isLoading) return <LoadData />;
@@ -51,16 +45,16 @@ const SingleEvent = () => {
 
       <View className="mt-5">
         <Text className="text-SecondaryTextColor">
-          {dayjs(singleEventData?.date).format("DD MMM YYYY")}
+          {dayjs(data?.date).format("DD MMM YYYY")}
         </Text>
         <Text className="text-PrimaryTextColor text-3xl font-semibold">
-          {singleEventData?.name}
+          {data?.name}
         </Text>
         <Text className="text-SecondaryTextColor text-lg">
-          {singleEventData?.description}
+          {data?.description}
         </Text>
 
-        <TotalGuests eventId={singleEventData?.id} />
+        <TotalGuests eventId={data?.id} />
       </View>
 
       <View className="rounded-xl mt-5">
@@ -69,16 +63,16 @@ const SingleEvent = () => {
             height: 200,
           }}
           initialRegion={{
-            latitude: Number(singleEventData?.latitude),
-            longitude: Number(singleEventData?.longitude),
+            latitude: Number(data?.latitude),
+            longitude: Number(data?.longitude),
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
         >
           <Marker
             coordinate={{
-              latitude: Number(singleEventData?.latitude),
-              longitude: Number(singleEventData?.longitude),
+              latitude: Number(data?.latitude),
+              longitude: Number(data?.longitude),
             }}
             pinColor="red"
           />

@@ -31,6 +31,7 @@ const Event = () => {
       <FlatList
         data={data}
         keyExtractor={(item) => item.id.toString()}
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           paddingVertical: 16,
           gap: 16
