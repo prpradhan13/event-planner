@@ -17,6 +17,19 @@ const MainLayout = () => {
     <QueryClientProvider client={queryClient}>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen 
+          name="event/[id]" 
+          options={{
+            headerShown: true,
+            // headerTransparent: true,
+            headerStyle: {
+              backgroundColor: "#1e1e1e",
+            },
+            headerShadowVisible: false,
+            headerTintColor: "#fff",
+            headerTitle: ""
+          }}
+        />
       </Stack>
     </QueryClientProvider>
   );

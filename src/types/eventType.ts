@@ -3,9 +3,10 @@ export type EventsType = {
     name: string;
     description?: string;
     date: string;
-    location: string;
     image_url?: string;
     user_id: string;
+    latitude?: string;
+    longitude?: string;
 }
 
 export type EventCardProps = {
