@@ -4,6 +4,7 @@ import { TaskCardProps } from "@/src/types/eventType";
 import dayjs from "dayjs";
 
 const TaskCard = ({ taskList }: TaskCardProps) => {
+  
   return (
     <View className="bg-SecondaryBackgroundColor p-3 rounded-xl">
       <View className="flex-row justify-between items-center">
@@ -14,7 +15,7 @@ const TaskCard = ({ taskList }: TaskCardProps) => {
               : taskList.status === "pending"
               ? "bg-yellow-500"
               : ""
-          } text-white capitalize text-sm w-[110px] px-2 py-1 rounded-md text-center`}
+          } text-black capitalize text-sm px-2 rounded-md text-center`}
         >
           {taskList.status}
         </Text>
@@ -25,7 +26,7 @@ const TaskCard = ({ taskList }: TaskCardProps) => {
       <Text className="text-PrimaryTextColor font-medium text-xl mt-3">
         {taskList.task_name}
       </Text>
-      <Text className="text-SecondaryTextColor font-medium text-base">
+      <Text className="text-SecondaryTextColor font-medium text-base" numberOfLines={1}>
         {taskList.description}
       </Text>
     </View>

@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import getInitialLetter from "@/src/utils/initialLetter";
+import UserNameBtn from "../smallHelping/UserNameBtn";
 
 const EventCard = ({ dataList }: EventCardProps) => {
   const handlePress = (eventId: number) => {
@@ -19,10 +20,10 @@ const EventCard = ({ dataList }: EventCardProps) => {
   return (
     <Pressable
       onPress={() => handlePress(dataList.id)}
-      className="bg-SecondaryBackgroundColor p-3 rounded-xl flex-row gap-5"
+      className="bg-SecondaryBackgroundColor p-3 rounded-xl flex-row gap-5 items-center"
     >
       <View className="w-[55%]">
-        <Text className="text-green-500">
+        <Text className="text-green-500 text-sm">
           {dayjs(dataList.date).format("DD/MM/YYYY")}
         </Text>
 
@@ -33,11 +34,13 @@ const EventCard = ({ dataList }: EventCardProps) => {
           {dataList.name}
         </Text>
         <Text
-          className="text-SecondaryTextColor text-lg leading-5 mt-2"
+          className="text-SecondaryTextColor text-base leading-5 my-2"
           numberOfLines={2}
         >
           {dataList.description}
         </Text>
+
+        <UserNameBtn userId={dataList.user_id} />
       </View>
 
       <View className="w-[40%]">

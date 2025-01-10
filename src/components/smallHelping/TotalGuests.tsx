@@ -10,19 +10,16 @@ interface TotalGuestsProps {
 
 const TotalGuests = ({ eventId }: TotalGuestsProps) => {
     const [modalVisible, setModalVisible] = useState(false)
-  const { data } = guestQuery(eventId);
-
-  const totalGuests = data?.length;
 
   return (
     <View>
         <TouchableOpacity 
             onPress={() => setModalVisible(true)}
-            className="gap-2 flex-row items-center"
+            className="gap-2 flex-row items-center border py-1 px-2 rounded-md border-BorderColor"
         >
-            <FontAwesome5 name="users" size={16} color="#f97316" />
-            <Text className="text-[#f97316] font-semibold text-lg">
-                {totalGuests}
+            <FontAwesome5 name="users" size={14} color="#c8c8c8" />
+            <Text className="text-SecondaryTextColor font-medium text-base">
+                Member
             </Text>
         </TouchableOpacity>
 

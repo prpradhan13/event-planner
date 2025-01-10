@@ -1,5 +1,5 @@
-import { Text, View } from "react-native";
-import React, { useMemo } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
+import React, { useMemo, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import getInitialLetter from "@/src/utils/initialLetter";
 import LoadData from "@/src/components/smallHelping/LoadData";
@@ -9,8 +9,13 @@ import Mapview, { Marker } from "react-native-maps";
 import TotalGuests from "@/src/components/smallHelping/TotalGuests";
 import { singleEventDetails } from "@/src/utils/quries/eventQurery";
 import Entypo from "@expo/vector-icons/Entypo";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import { useAuth } from "@/src/context/AuthProvider";
+import EventTaskBtn from "@/src/components/smallHelping/EventTaskBtn";
 
 const SingleEvent = () => {
+
+  const { user } = useAuth();
   const { id } = useLocalSearchParams();
   const singleId = Array.isArray(id) ? id[0] : id;
 
@@ -52,14 +57,20 @@ const SingleEvent = () => {
             </Text>
           </View>
         </View>
-        <Text className="text-PrimaryTextColor text-3xl font-semibold">
+        <Text className="text-PrimaryTextColor text-3xl font-semibold mt-3">
           {data?.name}
         </Text>
-        <Text className="text-SecondaryTextColor text-lg">
+        <Text className="text-SecondaryTextColor text-lg leading-5">
           {data?.description}
         </Text>
 
-        <TotalGuests eventId={data?.id} />
+        <View className="flex-row gap-3 mt-4">
+          <TotalGuests eventId={data?.id} />
+
+          {data?.user_id === user?.id && (
+            <EventTaskBtn eventId={data?.id} />
+          )}
+        </View>
       </View>
 
       <View className="rounded-xl mt-5">

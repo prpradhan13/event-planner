@@ -27,8 +27,10 @@ const Task = () => {
       <FlatList
         data={data}
         keyExtractor={(item) => item.id.toString()}
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingVertical: 16,
+          paddingTop: 16,
+          paddingBottom: 120,
           gap: 16,
         }}
         renderItem={({ item }) => <TaskCard taskList={item} />}

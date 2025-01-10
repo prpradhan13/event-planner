@@ -18,19 +18,26 @@ const GuestList = ({
 }: GuestListProps) => {
   const { data, isLoading } = guestQuery(eventId);
 
+  const inviteAcceptMembers = data?.filter((guest) => guest.status === "accepted");
+  
   return (
     <Modal visible={modalVisible} animationType="slide">
       <View className="flex-1 bg-MainBackgroundColor p-4">
         <View className="flex-row gap-5 items-center">
           <Ionicons onPress={() => setModalVisible(false)} name="arrow-back-sharp" size={24} color="#fff" />
-          <Text className="text-white text-3xl font-bold">Member</Text>
+          <View className="flex-row items-end gap-3">
+            <Text className="text-white text-3xl font-bold">Member</Text>
+            <Text className="text-base text-white font-medium leading-7">
+              {inviteAcceptMembers?.length}/{data?.length}
+            </Text>
+          </View>
         </View>
 
         {isLoading ? (
           <GuestListLoading />
         ) : (
           <FlatList
-            data={data}
+            data={inviteAcceptMembers}
             keyExtractor={(item) => item.id.toString()}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{
