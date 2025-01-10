@@ -23,7 +23,7 @@ const EventCard = ({ dataList }: EventCardProps) => {
     >
       <View className="w-[55%]">
         <Text className="text-green-500">
-          {dayjs(dataList.date).format("DD MMM YYYY")}
+          {dayjs(dataList.date).format("DD/MM/YYYY")}
         </Text>
 
         <Text

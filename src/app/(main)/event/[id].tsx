@@ -1,23 +1,20 @@
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View } from "react-native";
 import React, { useMemo } from "react";
 import { useLocalSearchParams } from "expo-router";
 import getInitialLetter from "@/src/utils/initialLetter";
-import { useQuery } from "@tanstack/react-query";
-import { useAuth } from "@/src/context/AuthProvider";
 import LoadData from "@/src/components/smallHelping/LoadData";
-import { EventsType } from "@/src/types/eventType";
 import { LinearGradient } from "expo-linear-gradient";
 import dayjs from "dayjs";
-import Entypo from "@expo/vector-icons/Entypo";
 import Mapview, { Marker } from "react-native-maps";
 import TotalGuests from "@/src/components/smallHelping/TotalGuests";
 import { singleEventDetails } from "@/src/utils/quries/eventQurery";
+import Entypo from "@expo/vector-icons/Entypo";
 
 const SingleEvent = () => {
   const { id } = useLocalSearchParams();
   const singleId = Array.isArray(id) ? id[0] : id;
 
-  const { data, isLoading } = singleEventDetails(singleId)
+  const { data, isLoading } = singleEventDetails(singleId);
 
   const eventInitialLetter = useMemo(
     () => getInitialLetter(data?.name),
@@ -44,9 +41,17 @@ const SingleEvent = () => {
       </LinearGradient>
 
       <View className="mt-5">
-        <Text className="text-SecondaryTextColor">
-          {dayjs(data?.date).format("DD MMM YYYY")}
-        </Text>
+        <View className="flex-row items-start gap-3">
+          <Entypo name="calendar" size={18} color="#c8c8c8" />
+          <View>
+            <Text className="text-SecondaryTextColor font-medium text-base leading-5">
+              {dayjs(data?.date).format("dddd, D MMM YYYY")}
+            </Text>
+            <Text className="text-SecondaryTextColor font-medium text-base">
+              {dayjs(`1970-01-01T${data?.event_time}`).format("hh:mm A")}
+            </Text>
+          </View>
+        </View>
         <Text className="text-PrimaryTextColor text-3xl font-semibold">
           {data?.name}
         </Text>

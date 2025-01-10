@@ -4,17 +4,15 @@ import { useAuth } from "@/src/context/AuthProvider";
 import { inviteQuery } from "@/src/utils/quries/invitesQurey";
 import LoadData from "../smallHelping/LoadData";
 import InvitesListItem from "./InvitesListItem";
-
+import InvitesCardList from "../loader/InvitesCardList";
 
 const Invites = () => {
   const { user } = useAuth();
 
   const { data, isLoading } = inviteQuery(user?.id);
 
-  // console.log(data);
-
   if (isLoading) {
-    return <LoadData />
+    return <InvitesCardList />
   }
 
   if (!data || data.length === 0) {
@@ -34,7 +32,7 @@ const Invites = () => {
           paddingVertical: 16,
           gap: 16
         }}
-        renderItem={({ item }) => <InvitesListItem inviteList={item} />}
+        renderItem={({ item }) => <InvitesListItem eventId={item.event_id} guestStatus={item.status} />}
       />
     </View>
   );

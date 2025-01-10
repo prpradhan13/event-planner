@@ -3,6 +3,7 @@ export type EventsType = {
     name: string;
     description?: string;
     date: string;
+    event_time?: string;
     image_url?: string;
     user_id: string;
     latitude?: string;
@@ -25,18 +26,6 @@ export type TaskTypes = {
 
 export type TaskCardProps = {
     taskList: TaskTypes;
-}
-
-export type InviteType = {
-    id: number;
-    event_id: number;
-    guest_id: string;
-    status: string;
-    created_at: string;
-}
-
-export type InvitesListItemProps = {
-    inviteList: InviteType;
 }
 
 export type GuestsType = {

@@ -1,20 +1,42 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { InvitesListItemProps } from '@/src/types/eventType'
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React from "react";
+import { singleEventDetails } from "@/src/utils/quries/eventQurery";
+import dayjs from "dayjs";
+import { router } from "expo-router";
+import InvitesCardList from "../loader/InvitesCardList";
 
-const InvitesListItem = ({ inviteList }: InvitesListItemProps) => {
-  return (
-    <View className="bg-[#333] p-3 rounded-xl">
-          <Text className="text-[#c6c6c6] text-xl"></Text>
-          <Text className="text-[#c6c6c6] text-xl"></Text>
-          <Text className="text-[#c6c6c6] text-xl">
-            {/* {dayjs(inviteList.date).format("DD MMM YYYY")} */}
-          </Text>
-          <Text className="text-[#c6c6c6] text-xl"></Text>
-        </View>
-  )
+interface InvitesListItemProps {
+  eventId: number;
+  guestStatus: string;
 }
 
-export default InvitesListItem
+const InvitesListItem = ({ eventId, guestStatus }: InvitesListItemProps) => {
+  const { data, isLoading } = singleEventDetails(eventId.toString());
 
-const styles = StyleSheet.create({})
+  const handlePress = () => {
+    router.push(`/event/${eventId}`);
+  };
+
+  return (
+    <TouchableOpacity
+      onPress={handlePress}
+      disabled={isLoading}
+      className="bg-SecondaryBackgroundColor p-3 rounded-lg"
+    >
+      <View className="flex-row gap-3 items-center">
+        <Text className="text-sm bg-[#dadada] px-1 text-center rounded-md capitalize">
+          {guestStatus}
+        </Text>
+
+        <Text className="text-SecondaryTextColor text-sm">
+          {dayjs(data?.date).format("DD/MM/YYYY")}
+        </Text>
+      </View>
+      <Text className="text-PrimaryTextColor font-medium text-xl mt-1">
+        {data?.name}
+      </Text>
+    </TouchableOpacity>
+  );
+};
+
+export default InvitesListItem;

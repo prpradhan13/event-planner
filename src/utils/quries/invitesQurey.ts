@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../supabase";
-import { InviteType } from "@/src/types/eventType";
+import { GuestsType } from "@/src/types/eventType";
 
 export const inviteQuery = (userId?: string) => {
-  return useQuery<InviteType[]>({
+  return useQuery<GuestsType[]>({
     queryKey: userId ? [`invites_${userId}`] : ["invites"],
     queryFn: async () => {
       if (!userId) {

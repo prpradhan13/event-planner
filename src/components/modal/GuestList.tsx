@@ -23,7 +23,7 @@ const GuestList = ({
       <View className="flex-1 bg-MainBackgroundColor p-4">
         <View className="flex-row gap-5 items-center">
           <Ionicons onPress={() => setModalVisible(false)} name="arrow-back-sharp" size={24} color="#fff" />
-          <Text className="text-white text-3xl font-bold">People</Text>
+          <Text className="text-white text-3xl font-bold">Member</Text>
         </View>
 
         {isLoading ? (
