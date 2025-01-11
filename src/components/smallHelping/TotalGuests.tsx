@@ -15,7 +15,7 @@ const TotalGuests = ({ eventId }: TotalGuestsProps) => {
     <View>
         <TouchableOpacity 
             onPress={() => setModalVisible(true)}
-            className="gap-2 flex-row items-center border py-1 px-2 rounded-md border-BorderColor"
+            className="gap-2 flex-row items-center border py-1 px-2 rounded-md bg-[#5d5d5d]"
         >
             <FontAwesome5 name="users" size={14} color="#c8c8c8" />
             <Text className="text-SecondaryTextColor font-medium text-base">

@@ -8,6 +8,8 @@ export type EventsType = {
     user_id: string;
     latitude?: string;
     longitude?: string;
+    status: string;
+    isPublic: boolean;
 }
 
 export type EventCardProps = {

@@ -4,6 +4,7 @@ import { singleEventDetails } from "@/src/utils/quries/eventQurery";
 import dayjs from "dayjs";
 import { router } from "expo-router";
 import InvitesCardList from "../loader/InvitesCardList";
+import UserNameBtn from "../smallHelping/UserNameBtn";
 
 interface InvitesListItemProps {
   eventId: number;
@@ -32,9 +33,11 @@ const InvitesListItem = ({ eventId, guestStatus }: InvitesListItemProps) => {
           {dayjs(data?.date).format("DD/MM/YYYY")}
         </Text>
       </View>
-      <Text className="text-PrimaryTextColor font-medium text-xl mt-1">
+      <Text className="text-PrimaryTextColor font-medium text-xl mt-1 mb-2">
         {data?.name}
       </Text>
+
+      <UserNameBtn userId={data?.user_id!} />
     </TouchableOpacity>
   );
 };

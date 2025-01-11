@@ -32,5 +32,3 @@ const UserNameBtn = ({ userId }: UserNameBtnProps) => {
 };
 
 export default UserNameBtn;
-
-const styles = StyleSheet.create({});

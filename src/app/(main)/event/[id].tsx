@@ -1,5 +1,5 @@
 import { Text, TouchableOpacity, View } from "react-native";
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { useLocalSearchParams } from "expo-router";
 import getInitialLetter from "@/src/utils/initialLetter";
 import LoadData from "@/src/components/smallHelping/LoadData";
@@ -9,9 +9,9 @@ import Mapview, { Marker } from "react-native-maps";
 import TotalGuests from "@/src/components/smallHelping/TotalGuests";
 import { singleEventDetails } from "@/src/utils/quries/eventQurery";
 import Entypo from "@expo/vector-icons/Entypo";
-import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { useAuth } from "@/src/context/AuthProvider";
 import EventTaskBtn from "@/src/components/smallHelping/EventTaskBtn";
+import UserNameBtn from "@/src/components/smallHelping/UserNameBtn";
 
 const SingleEvent = () => {
 
