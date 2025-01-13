@@ -6,19 +6,20 @@ import {
 import React, { Dispatch, SetStateAction } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { CreateEventFormData } from "@/src/types/eventType";
 
 interface SearchLocationProps {
   modalVisible: boolean;
   setModalVisible: Dispatch<SetStateAction<boolean>>;
-  setFormData: any;
-  setSelectedLocation: any;
+  setFormData: Dispatch<SetStateAction<CreateEventFormData>>;
+  setSelectedLocation: Dispatch<SetStateAction<string>>;
 }
 
 const SearchLocation = ({
   modalVisible,
   setModalVisible,
   setFormData,
-  setSelectedLocation,
+  setSelectedLocation
 }: SearchLocationProps) => {
 
   const handleSelectPlace = (data: any, details: any) => {
@@ -28,7 +29,8 @@ const SearchLocation = ({
       latitude: lat.toString(),
       longitude: lng.toString(),
     }));
-    setSelectedLocation({ latitude: lat, longitude: lng });
+    setSelectedLocation(details.formatted_address);
+    setModalVisible(false);
   };
 
   return (

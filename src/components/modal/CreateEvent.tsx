@@ -1,9 +1,7 @@
 import {
+  ActivityIndicator,
   Image,
-  KeyboardAvoidingView,
   Modal,
-  Platform,
-  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -17,9 +15,10 @@ import SearchLocation from "./SearchLocation";
 import { supabase } from "@/src/utils/supabase";
 import { useAuth } from "@/src/context/AuthProvider";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import * as FileSystem from 'expo-file-system';
 import { decode } from 'base64-arraybuffer';
+import { CreateEventFormData } from "@/src/types/eventType";
+import { createEvent } from "@/src/utils/quries/eventQurery";
 
 interface CreateEventProps {
   modalVisible: boolean;
@@ -27,22 +26,20 @@ interface CreateEventProps {
 }
 
 const CreateEvent = ({ modalVisible, setModalVisible }: CreateEventProps) => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<CreateEventFormData>({
     name: "",
     description: "",
     date: "",
-    time: null,
-    latitude: "",
-    longitude: "",
-    imageUri: null as string | null,
+    event_time: null,
+    latitude: null,
+    longitude: null,
+    imageUri: null,
   });
-  const [mapVisible, setMapVisible] = useState(false);
-  const [selectedLocation, setSelectedLocation] = useState<{
-    latitude: number;
-    longitude: number;
-  } | null>(null);
   const [locationSearchModal, setLocationSearchModal] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState("");
+  
+  const { user } = useAuth();
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -60,75 +57,13 @@ const CreateEvent = ({ modalVisible, setModalVisible }: CreateEventProps) => {
     }
   };
 
-  const handleMapSelect = (event: any) => {
-    const { latitude, longitude } = event.nativeEvent.coordinate;
-    setFormData((prev) => ({
-      ...prev,
-      latitude: latitude.toString(),
-      longitude: longitude.toString(),
-    }));
-    setSelectedLocation({ latitude, longitude });
-    setMapVisible(false);
-  };
-
   const handleDateChange = (event: any, selectedDate?: Date) => {
     setShowDatePicker(false);
     if (selectedDate) {
-      // Convert selectedDate to a string
-      const formattedDate = selectedDate.toISOString().split("T")[0]; // e.g., "2025-01-15"
+      // Adjust to local timezone
+      const localDate = new Date(selectedDate.getTime() - selectedDate.getTimezoneOffset() * 60000);
+      const formattedDate = localDate.toISOString().split("T")[0]; // e.g., "2025-01-15"
       handleInputChange("date", formattedDate);
-    }
-  };
-
-  const { user } = useAuth();
-
-  const handleCreateEvent = async () => {
-    const { name, description, date, time, latitude, longitude, imageUri } =
-      formData;
-      
-    try {
-      // Upload Image
-      const base64 = await FileSystem.readAsStringAsync(imageUri!, { encoding: 'base64' });
-      const fileName = `${user?.id}/${new Date().getTime()}.jpeg`;
-
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from("event-images")
-        .upload(fileName, decode(base64), {
-          contentType: "image/jpeg",
-        });
-
-      if (uploadError) {
-        // console.log(uploadError);
-        throw new Error(uploadError.message);
-      }
-
-      const imageUrl = supabase.storage
-        .from("event-images")
-        .getPublicUrl(fileName).data.publicUrl;
-
-      // Insert Event Data
-      const { data, error } = await supabase.from("events").insert([
-        {
-          name,
-          description,
-          date,
-          event_time: time,
-          image_url: imageUrl,
-          user_id: user?.id,
-          latitude: latitude || null,
-          longitude: longitude || null,
-        },
-      ]);
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      alert("Success" + "Event created successfully!");
-      setModalVisible(false);
-      resetForm();
-    } catch (error: any) {
-      alert("Error" + error.message);
     }
   };
 
@@ -137,11 +72,17 @@ const CreateEvent = ({ modalVisible, setModalVisible }: CreateEventProps) => {
       name: "",
       description: "",
       date: "",
-      time: null,
-      latitude: "",
-      longitude: "",
+      event_time: null,
+      latitude: 0,
+      longitude: 0,
       imageUri: null,
     });
+  };
+
+  const { mutate, isPending } = createEvent({ formData, userId: user?.id, setModalVisible, resetForm })
+
+  const handleCreateEvent = () => {
+    mutate()
   };
 
   return (
@@ -220,21 +161,32 @@ const CreateEvent = ({ modalVisible, setModalVisible }: CreateEventProps) => {
           />
         )}
 
+        {selectedLocation && (
+          <View className="flex-row gap-2 items-center mt-5">
+            <Entypo name="location-pin" size={24} color="#ef4444" />
+            <Text className="text-SecondaryTextColor leading-5 text-lg capitalize font-medium">{selectedLocation}</Text>
+          </View>
+        )}
+
         {/* Image Picker */}
         {formData.imageUri && (
           <Image
             source={{ uri: formData.imageUri }}
-            className="w-full h-40 rounded my-4"
+            className="w-full h-[200] rounded my-4"
             resizeMode="cover"
           />
         )}
 
         {/* Submit Button */}
         <TouchableOpacity
-          className="bg-PrimaryColor p-3 rounded"
+          className="bg-blue-500 p-3 rounded-md mt-4"
           onPress={handleCreateEvent}
         >
-          <Text className="text-white text-center font-bold">Create Event</Text>
+          {isPending ? (
+            <ActivityIndicator color={"white"} />
+          ) : (
+            <Text className="text-white text-center font-bold">Create Event</Text>
+          )}
         </TouchableOpacity>
       </View>
     </Modal>

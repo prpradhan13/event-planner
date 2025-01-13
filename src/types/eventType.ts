@@ -44,3 +44,13 @@ export type GuestDetailsType = {
     username: string;
     avatar_url?: string;
 }
+
+export type CreateEventFormData = {
+    name: string;
+    description: string;
+    date: string;
+    event_time: string | null;
+    latitude: number | null;
+    longitude: number | null;
+    imageUri: string | null;
+}
