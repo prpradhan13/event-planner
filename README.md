@@ -6,19 +6,18 @@ Event Planner is a robust application designed to simplify the process of organi
 
 ## Features
 
-- **Event Creation**: Easily create events with details like name, date, time, and location.
-- **Attendee Management**: Add, edit, and manage attendee information.
-- **Notifications**: Send automated reminders and updates to attendees.
-- **Customizable Themes**: Personalize event pages to match your branding or preferences.
-- **Analytics Dashboard**: Gain insights into RSVP status, attendance, and engagement.
+- **Event Creation**: Easily create events with details like name, date, time, location and image.
+- **Event Task Management**: Add, edit, and manage task information.
+- **Invite Guests**: Invite memebers to event.
+- **Notifications**: Send automated reminders and updates to tasks and guests invitation.
 
 ## Technology Stack
 
-- **Frontend**: React.js for a dynamic and responsive user interface.
-- **Backend**: Node.js with Express for server-side functionality.
-- **Database**: MongoDB for efficient data storage and retrieval.
-- **Authentication**: JSON Web Tokens (JWT) for secure user authentication.
-- **Styling**: Tailwind CSS for sleek and modern design.
+- **React Native & Expo**: For a dynamic and responsive user interface.
+- **Supabase**: For efficient data storage and Authentication.
+- **Google APIs**: For map details.
+- **Tanstack Query**: For featching, caching data.
+- **Nativewind**: For sleek and modern design.
 
 ## Installation
 
@@ -38,13 +37,13 @@ Event Planner is a robust application designed to simplify the process of organi
    - Create a `.env` file in the root directory.
    - Add the following variables:
      ```
-     PORT=3000
-     MONGO_URI=your_mongodb_connection_string
-     JWT_SECRET=your_jwt_secret
+     EXPO_PUBLIC_SUPABASE_URL=your_supabase_url
+     EXPO_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+     EXPO_PUBLIC_MAP_API_KEY=your_google_map_api_key
      ```
 5. Start the development server:
    ```bash
-   npm run dev
+   npm run start
    ```
 
 ## Usage
