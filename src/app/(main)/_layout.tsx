@@ -3,6 +3,7 @@ import React from "react";
 import { useAuth } from "@/src/context/AuthProvider";
 import { Redirect, Stack } from "expo-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import "react-native-get-random-values";
 
 const queryClient = new QueryClient();
 

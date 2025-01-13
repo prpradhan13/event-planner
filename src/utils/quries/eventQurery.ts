@@ -65,3 +65,5 @@ export const singleEventDetails = (eventId?: string) => {
     enabled: !!eventId
   })
 }
+
+

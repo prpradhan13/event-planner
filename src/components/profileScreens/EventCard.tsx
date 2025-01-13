@@ -1,4 +1,4 @@
-import { Pressable, Text, View } from "react-native";
+import { Image, Pressable, Text, View } from "react-native";
 import React, { useMemo } from "react";
 import { EventCardProps } from "@/src/types/eventType";
 import dayjs from "dayjs";
@@ -44,15 +44,28 @@ const EventCard = ({ dataList }: EventCardProps) => {
       </View>
 
       <View className="w-[40%]">
-        <LinearGradient
-          colors={["#333333", "#000000"]}
-          className="rounded-xl w-full h-32 justify-center items-center overflow-hidden"
-        >
-          <Text className="font-semibold text-2xl tracking-widest text-white">
-            {" "}
-            {eventInitialLetter}{" "}
-          </Text>
-        </LinearGradient>
+
+        {dataList.image_url ? (
+          <Image
+            source={{ uri: dataList.image_url }}
+            style={{
+              width: '100%',
+              height: 128,
+              borderRadius: 12,
+            }}
+            resizeMode="cover"
+          />
+        ) : (
+          <LinearGradient
+            colors={["#333333", "#000000"]}
+            className="rounded-xl w-full h-32 justify-center items-center overflow-hidden"
+          >
+            <Text className="font-semibold text-2xl tracking-widest text-white">
+              {" "}
+              {eventInitialLetter}{" "}
+            </Text>
+          </LinearGradient>
+        )}
       </View>
     </Pressable>
   );

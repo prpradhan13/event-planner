@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, View } from "react-native";
 import React, { useMemo } from "react";
 import { useLocalSearchParams } from "expo-router";
 import getInitialLetter from "@/src/utils/initialLetter";
@@ -11,10 +11,8 @@ import { singleEventDetails } from "@/src/utils/quries/eventQurery";
 import Entypo from "@expo/vector-icons/Entypo";
 import { useAuth } from "@/src/context/AuthProvider";
 import EventTaskBtn from "@/src/components/smallHelping/EventTaskBtn";
-import UserNameBtn from "@/src/components/smallHelping/UserNameBtn";
 
 const SingleEvent = () => {
-
   const { user } = useAuth();
   const { id } = useLocalSearchParams();
   const singleId = Array.isArray(id) ? id[0] : id;
@@ -67,9 +65,7 @@ const SingleEvent = () => {
         <View className="flex-row gap-3 mt-4">
           <TotalGuests eventId={data?.id} />
 
-          {data?.user_id === user?.id && (
-            <EventTaskBtn eventId={data?.id} />
-          )}
+          {data?.user_id === user?.id && <EventTaskBtn eventId={data?.id} />}
         </View>
       </View>
 

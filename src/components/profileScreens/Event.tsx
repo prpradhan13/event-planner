@@ -33,7 +33,8 @@ const Event = () => {
         keyExtractor={(item) => item.id.toString()}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingVertical: 16,
+          paddingTop: 16,
+          paddingBottom: 150,
           gap: 16
         }}
         renderItem={({ item }) => (

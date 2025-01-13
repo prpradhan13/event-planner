@@ -1,11 +1,8 @@
-import { FlatList, Modal, StyleSheet, Text, View } from "react-native";
+import { FlatList, Modal, Text, View } from "react-native";
 import React, { Dispatch, SetStateAction } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { tasksForEvent } from "@/src/utils/quries/taskQuery";
 import LoadData from "../smallHelping/LoadData";
-import BouncyCheckbox from "react-native-bouncy-checkbox";
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { getUserDetatils } from "@/src/utils/quries/userQuery";
 import UserNameBtn from "../smallHelping/UserNameBtn";
 
 interface EventTaskProps {
@@ -35,6 +32,7 @@ const EventTask = ({
             <Text className="text-white text-3xl font-bold">Tasks</Text>
           </View>
         </View>
+        
         <FlatList
           data={data}
           keyExtractor={(item) => item.id.toString()}

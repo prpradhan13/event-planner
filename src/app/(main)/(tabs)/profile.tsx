@@ -1,4 +1,4 @@
-import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, Text, TouchableOpacity, View } from "react-native";
 import React, { useMemo, useState } from "react";
 import { supabase } from "@/src/utils/supabase";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -9,9 +9,13 @@ import Task from "@/src/components/profileScreens/Task";
 import Invites from "@/src/components/profileScreens/Invites";
 import getInitialLetter from "@/src/utils/initialLetter";
 import { LinearGradient } from "expo-linear-gradient";
+import Ionicons from '@expo/vector-icons/Ionicons';
+import LoadData from "@/src/components/smallHelping/LoadData";
+import CreateEvent from "@/src/components/modal/CreateEvent";
 
 const profile = () => {
   const [selectedSection, setSelectedSection] = useState("event");
+  const [modalVisible, setModalVisible] = useState(false);
   const { user } = useAuth();
 
   const { data: userData, isLoading } = useQuery({
@@ -31,13 +35,7 @@ const profile = () => {
     [userData]
   );
 
-  if (isLoading) {
-    return (
-      <View className="flex-1 justify-center items-center bg-MainBackgroundColor">
-        <ActivityIndicator size="large" color="white" />
-      </View>
-    );
-  }
+  if (isLoading) return <LoadData />
 
   return (
     <SafeAreaView className="flex-1 bg-MainBackgroundColor justify-center items-center">
@@ -66,9 +64,17 @@ const profile = () => {
             {userData?.email}
           </Text>
         </View>
+
+        <TouchableOpacity
+          onPress={() => setModalVisible(true)}
+          className="flex-row items-center gap-3 border py-1 px-3 rounded-md border-BorderColor mt-2"
+        >
+          <Text className="text-SecondaryTextColor font-medium">Create Event</Text>
+          <Ionicons name="create" size={20} color="#c8c8c8" />
+        </TouchableOpacity>
       </View>
 
-      <View className="flex-1 w-full mt-8 items-center">
+      <View className="flex-1 w-full mt-4 items-center">
         <View className="p-2 rounded-xl space-x-2 flex-row bg-[#000]">
           <Pressable
             onPress={() => setSelectedSection("event")}
@@ -124,6 +130,13 @@ const profile = () => {
           {selectedSection === "invite" && <Invites />}
         </View>
       </View>
+
+      {modalVisible && (
+        <CreateEvent 
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+        />
+      )}
     </SafeAreaView>
   );
 };
