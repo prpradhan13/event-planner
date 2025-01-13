@@ -1,50 +1,56 @@
-# Welcome to your Expo app 👋
+# Event Planner
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Description
 
-## Get started
+Event Planner is a robust application designed to simplify the process of organizing and managing events. Whether you’re planning a small gathering or a large conference, this tool helps you track attendees, schedule events, and send out reminders seamlessly.
 
-1. Install dependencies
+## Features
 
+- **Event Creation**: Easily create events with details like name, date, time, and location.
+- **Attendee Management**: Add, edit, and manage attendee information.
+- **Notifications**: Send automated reminders and updates to attendees.
+- **Customizable Themes**: Personalize event pages to match your branding or preferences.
+- **Analytics Dashboard**: Gain insights into RSVP status, attendance, and engagement.
+
+## Technology Stack
+
+- **Frontend**: React.js for a dynamic and responsive user interface.
+- **Backend**: Node.js with Express for server-side functionality.
+- **Database**: MongoDB for efficient data storage and retrieval.
+- **Authentication**: JSON Web Tokens (JWT) for secure user authentication.
+- **Styling**: Tailwind CSS for sleek and modern design.
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/username/event-planner.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd event-planner
+   ```
+3. Install dependencies:
    ```bash
    npm install
    ```
-
-2. Start the app
-
+4. Set up environment variables:
+   - Create a `.env` file in the root directory.
+   - Add the following variables:
+     ```
+     PORT=3000
+     MONGO_URI=your_mongodb_connection_string
+     JWT_SECRET=your_jwt_secret
+     ```
+5. Start the development server:
    ```bash
-    npx expo start
+   npm run dev
    ```
 
-In the output, you'll find options to open the app in a
+## Usage
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+1. **Sign Up/Login**: Create an account or log in with your credentials.
+2. **Create an Event**: Navigate to the dashboard and click "Create Event" to add a new event.
+3. **Manage Attendees**: Add attendees manually or upload a CSV file.
+4. **Send Notifications**: Use the built-in notification system to remind attendees of upcoming events.
+5. **View Analytics**: Access real-time analytics on your event’s performance.
