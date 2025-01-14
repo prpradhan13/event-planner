@@ -101,7 +101,7 @@ const SingleEvent = () => {
         </Text>
 
         <View className="flex-row gap-3 mt-4">
-          <TotalGuests eventId={data?.id} />
+          <TotalGuests eventId={data?.id} eventCreaterId={data?.user_id} />
 
           {data?.user_id === user?.id && <EventTaskBtn eventId={data?.id} />}
         </View>
