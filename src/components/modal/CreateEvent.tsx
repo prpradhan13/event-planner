@@ -12,11 +12,8 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import * as ImagePicker from "expo-image-picker";
 import Entypo from "@expo/vector-icons/Entypo";
 import SearchLocation from "./SearchLocation";
-import { supabase } from "@/src/utils/supabase";
 import { useAuth } from "@/src/context/AuthProvider";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import * as FileSystem from 'expo-file-system';
-import { decode } from 'base64-arraybuffer';
 import { CreateEventFormData } from "@/src/types/eventType";
 import { createEvent } from "@/src/utils/quries/eventQurery";
 

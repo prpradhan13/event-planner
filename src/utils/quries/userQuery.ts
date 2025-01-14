@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../supabase";
+import { UserTypes } from "@/src/types/authType";
 
 export const getUserDetatils = (userId: string) => {
-  return useQuery({
+  return useQuery<UserTypes>({
     queryKey: [`user_detail_${userId}`],
     queryFn: async () => {
       if (!userId) {
@@ -11,7 +12,7 @@ export const getUserDetatils = (userId: string) => {
 
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, username, full_name, avatar_url")
+        .select("*")
         .eq("id", userId)
         .single();
 
@@ -21,6 +22,23 @@ export const getUserDetatils = (userId: string) => {
 
       return data || [];
     },
-    enabled: !!userId
+    enabled: !!userId,
+  });
+};
+
+export const allUsers = () => {
+  return useQuery<UserTypes[]>({
+    queryKey: [`allUsers`],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      return data || [];
+    },
   });
 };

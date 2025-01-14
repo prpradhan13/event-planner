@@ -42,7 +42,7 @@ export type GuestDetailsType = {
     email: string;
     full_name: string;
     username: string;
-    avatar_url?: string;
+    avatar_url: string | null;
 }
 
 export type CreateEventFormData = {
