@@ -32,7 +32,7 @@ const Invites = () => {
           paddingVertical: 16,
           gap: 16
         }}
-        renderItem={({ item }) => <InvitesListItem eventId={item.event_id} guestStatus={item.status} />}
+        renderItem={({ item }) => <InvitesListItem inviteId={item.id} eventId={item.event_id} inviteStatus={item.status} />}
       />
     </View>
   );

@@ -31,7 +31,7 @@ export type TaskCardProps = {
 }
 
 export type GuestsType = {
-    id: string;
+    id: number;
     event_id: number;
     guest_id: string;
     status: string;

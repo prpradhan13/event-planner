@@ -12,7 +12,6 @@ import Entypo from "@expo/vector-icons/Entypo";
 import { useAuth } from "@/src/context/AuthProvider";
 import EventTaskBtn from "@/src/components/smallHelping/EventTaskBtn";
 import { locationName } from "@/src/utils/services/locationName";
-import axios from "axios";
 
 const SingleEvent = () => {
   const { user } = useAuth();
