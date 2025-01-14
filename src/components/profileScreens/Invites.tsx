@@ -9,7 +9,7 @@ import InvitesCardList from "../loader/InvitesCardList";
 const Invites = () => {
   const { user } = useAuth();
 
-  const { data, isLoading } = inviteQuery(user?.id);
+  const { data, isLoading } = inviteQuery();
 
   if (isLoading) {
     return <InvitesCardList />

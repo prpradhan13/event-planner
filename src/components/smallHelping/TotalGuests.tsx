@@ -1,14 +1,14 @@
 import { Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
-import { guestQuery } from "@/src/utils/quries/guestQuery";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import GuestList from "../modal/GuestList";
 
 interface TotalGuestsProps {
   eventId?: number;
+  eventCreaterId?: string;
 }
 
-const TotalGuests = ({ eventId }: TotalGuestsProps) => {
+const TotalGuests = ({ eventId, eventCreaterId }: TotalGuestsProps) => {
     const [modalVisible, setModalVisible] = useState(false)
 
   return (
@@ -28,6 +28,7 @@ const TotalGuests = ({ eventId }: TotalGuestsProps) => {
                 modalVisible={modalVisible}
                 setModalVisible={setModalVisible}
                 eventId={eventId}
+                eventCreaterId={eventCreaterId}
             />
         )}
     </View>

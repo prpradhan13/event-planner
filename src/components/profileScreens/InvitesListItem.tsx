@@ -1,11 +1,9 @@
-import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { singleEventDetails } from "@/src/utils/quries/eventQurery";
 import dayjs from "dayjs";
 import { router } from "expo-router";
-import InvitesCardList from "../loader/InvitesCardList";
 import UserNameBtn from "../smallHelping/UserNameBtn";
-import { GuestsType } from "@/src/types/eventType";
 import { inviteStatusChange } from "@/src/utils/quries/invitesQurey";
 
 const InvitesListItem = ({ inviteId, eventId, inviteStatus }: {inviteId: number, eventId: number, inviteStatus: string}) => {
@@ -14,7 +12,6 @@ const InvitesListItem = ({ inviteId, eventId, inviteStatus }: {inviteId: number,
   const handlePress = () => {
     router.push(`/event/${eventId}`);
   };
-  
   
   const { mutate, isPending } = inviteStatusChange();
   
