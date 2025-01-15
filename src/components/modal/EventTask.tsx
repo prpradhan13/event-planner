@@ -4,8 +4,9 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { tasksForEvent } from "@/src/utils/quries/taskQuery";
 import LoadData from "../smallHelping/LoadData";
 import UserNameBtn from "../smallHelping/UserNameBtn";
-import AntDesign from '@expo/vector-icons/AntDesign';
+import AntDesign from "@expo/vector-icons/AntDesign";
 import CreateTask from "./CreateTask";
+import DeleteAlert from "../smallHelping/DeleteAlert";
 
 interface EventTaskProps {
   taskModalVisible: boolean;
@@ -19,6 +20,7 @@ const EventTask = ({
   eventId,
 }: EventTaskProps) => {
   const [createTaskOpen, setCreateTaskOpen] = useState(false);
+  const [deleteAlertOpen, setDeleteAlertOpen] = useState<number | null>(null);
   const { data, isLoading } = tasksForEvent(eventId);
 
   return (
@@ -35,23 +37,23 @@ const EventTask = ({
             <Text className="text-white text-3xl font-bold">Tasks</Text>
           </View>
 
-            <Pressable
-              onPress={() => setCreateTaskOpen(true)}
-              className="bg-white rounded-md px-2 flex-row items-center gap-1"
-            >
-              <AntDesign name="plus" size={18} color="black" />
-              <Text className="font-medium">Add</Text>
-            </Pressable>
+          <Pressable
+            onPress={() => setCreateTaskOpen(true)}
+            className="bg-white rounded-md px-2 flex-row items-center gap-1"
+          >
+            <AntDesign name="plus" size={18} color="black" />
+            <Text className="font-medium">Add</Text>
+          </Pressable>
         </View>
 
         {createTaskOpen && (
-          <CreateTask 
+          <CreateTask
             modalVisible={createTaskOpen}
             setModalVisible={setCreateTaskOpen}
             eventId={eventId!}
           />
         )}
-        
+
         <FlatList
           data={data}
           keyExtractor={(item) => item.id.toString()}
@@ -78,8 +80,18 @@ const EventTask = ({
                     </Text>
 
                     <View className="flex-row gap-5 mt-3">
-                        <UserNameBtn userId={item.assigned_to}/>
-                        <Text className="text-black capitalize bg-yellow-500 px-2 py-1 text-sm rounded-md">{item.status}</Text>
+                      <UserNameBtn userId={item.assigned_to} />
+                      <Text className="text-black capitalize bg-yellow-500 px-2 py-1 text-sm rounded-md">
+                        {item.status}
+                      </Text>
+                      <Pressable
+                        onPress={() => setDeleteAlertOpen(item.id)}
+                        className="bg-red-500 px-2 py-1 rounded-md"
+                      >
+                        <Text className="text-black capitalize text-sm">
+                          Remove
+                        </Text>
+                      </Pressable>
                     </View>
                   </View>
                 </View>
@@ -88,10 +100,20 @@ const EventTask = ({
           }}
           ListEmptyComponent={() => (
             <View className="h-[80vh] justify-center items-center">
-              <Text className="text-[#c5c5c5] text-xl font-medium ">No Tasks</Text>
+              <Text className="text-[#c5c5c5] text-xl font-medium ">
+                No Tasks
+              </Text>
             </View>
           )}
         />
+
+        {deleteAlertOpen && (
+          <DeleteAlert
+            deleteAlertOpen={deleteAlertOpen}
+            setDeleteAlertOpen={setDeleteAlertOpen}
+            eventId={eventId!}
+          />
+        )}
       </View>
     </Modal>
   );

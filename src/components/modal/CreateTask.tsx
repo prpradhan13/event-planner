@@ -44,8 +44,6 @@ const CreateTask = ({
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [openAllUsersList, setOpenAllUsersList] = useState(false);
 
-  const queryClient = useQueryClient();
-
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -70,6 +68,14 @@ const CreateTask = ({
   const { mutate, isPending } = addTask(eventId, setModalVisible);
 
   const handleCreateTask = () => {
+    if (!formData.task_name) {
+        alert("Please give it a name.")
+        return;
+    }
+    if (!formData.assigned_to) {
+        alert("Please assign to somebody to do this task.")
+        return;
+    }
     mutate({ formData });
   };
 
