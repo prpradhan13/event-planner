@@ -23,7 +23,6 @@ const Task = () => {
   }
 
   return (
-    <View className="px-4">
       <FlatList
         data={data}
         keyExtractor={(item) => item.id.toString()}
@@ -35,7 +34,6 @@ const Task = () => {
         }}
         renderItem={({ item }) => <TaskCard taskList={item} />}
       />
-    </View>
   );
 };
 

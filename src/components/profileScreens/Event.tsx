@@ -1,11 +1,17 @@
-import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React from "react";
 import { useAuth } from "@/src/context/AuthProvider";
 import { getUserEvents } from "@/src/utils/quries/eventQurery";
 import EventCard from "@/src/components/profileScreens/EventCard";
 
 const Event = () => {
-  const {user} = useAuth();
+  const { user } = useAuth();
 
   const { data, isLoading } = getUserEvents(user?.id);
 
@@ -23,25 +29,21 @@ const Event = () => {
       <TouchableOpacity className="bg-[#000] p-2 rounded-xl mt-4">
         <Text className="text-[#c6c6c6] text-xl">Create Event</Text>
       </TouchableOpacity>
-    </View>
+    </View>;
   }
 
   return (
-    <View className="px-4">
-      <FlatList
-        data={data}
-        keyExtractor={(item) => item.id.toString()}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingTop: 16,
-          paddingBottom: 150,
-          gap: 16
-        }}
-        renderItem={({ item }) => (
-          <EventCard dataList={item} />
-        )}
-      />
-    </View>
+    <FlatList
+      data={data}
+      keyExtractor={(item) => item.id.toString()}
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{
+        paddingTop: 16,
+        paddingBottom: 150,
+        gap: 16,
+      }}
+      renderItem={({ item }) => <EventCard dataList={item} />}
+    />
   );
 };
 

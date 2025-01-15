@@ -1,9 +1,10 @@
-import { FlatList, Modal, Text, View } from "react-native";
+import { FlatList, Modal, Pressable, Text, View } from "react-native";
 import React, { Dispatch, SetStateAction } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { tasksForEvent } from "@/src/utils/quries/taskQuery";
 import LoadData from "../smallHelping/LoadData";
 import UserNameBtn from "../smallHelping/UserNameBtn";
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 interface EventTaskProps {
   taskModalVisible: boolean;
@@ -21,16 +22,23 @@ const EventTask = ({
   return (
     <Modal visible={taskModalVisible} animationType="slide">
       <View className="flex-1 bg-MainBackgroundColor p-4">
-        <View className="flex-row gap-5 items-center">
-          <Ionicons
-            onPress={() => setTaskModalVisible(false)}
-            name="arrow-back-sharp"
-            size={24}
-            color="#fff"
-          />
-          <View className="flex-row items-end gap-3">
+        <View className="flex-row items-center justify-between">
+          <View className="flex-row gap-5 items-center">
+            <Ionicons
+              onPress={() => setTaskModalVisible(false)}
+              name="arrow-back-sharp"
+              size={24}
+              color="#fff"
+            />
             <Text className="text-white text-3xl font-bold">Tasks</Text>
           </View>
+
+            <Pressable
+              className="bg-white rounded-md px-2 flex-row items-center gap-1"
+            >
+              <AntDesign name="plus" size={18} color="black" />
+              <Text className="font-medium">Add</Text>
+            </Pressable>
         </View>
         
         <FlatList
@@ -67,6 +75,11 @@ const EventTask = ({
               </>
             );
           }}
+          ListEmptyComponent={() => (
+            <View className="h-[80vh] justify-center items-center">
+              <Text className="text-[#c5c5c5] text-xl font-medium ">No Tasks</Text>
+            </View>
+          )}
         />
       </View>
     </Modal>

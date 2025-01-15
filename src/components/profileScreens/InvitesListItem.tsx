@@ -24,7 +24,7 @@ const InvitesListItem = ({ inviteId, eventId, inviteStatus }: {inviteId: number,
     <TouchableOpacity
       onPress={handlePress}
       disabled={isLoading}
-      className="bg-SecondaryBackgroundColor p-3 rounded-lg"
+      className="bg-SecondaryBackgroundColor p-3 rounded-lg w-full"
     >
       <View className="flex-row gap-3 items-center">
         <TouchableOpacity

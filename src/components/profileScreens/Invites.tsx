@@ -24,7 +24,6 @@ const Invites = () => {
   }
 
   return (
-    <View className="px-4">
       <FlatList 
         data={data}
         keyExtractor={(item) => item.id.toString()}
@@ -34,7 +33,6 @@ const Invites = () => {
         }}
         renderItem={({ item }) => <InvitesListItem inviteId={item.id} eventId={item.event_id} inviteStatus={item.status} />}
       />
-    </View>
   );
 };
 

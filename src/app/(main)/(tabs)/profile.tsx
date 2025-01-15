@@ -1,4 +1,13 @@
-import { ActivityIndicator, Pressable, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useMemo, useState } from "react";
 import { supabase } from "@/src/utils/supabase";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -9,71 +18,80 @@ import Task from "@/src/components/profileScreens/Task";
 import Invites from "@/src/components/profileScreens/Invites";
 import getInitialLetter from "@/src/utils/initialLetter";
 import { LinearGradient } from "expo-linear-gradient";
-import Ionicons from '@expo/vector-icons/Ionicons';
+import Ionicons from "@expo/vector-icons/Ionicons";
 import LoadData from "@/src/components/smallHelping/LoadData";
 import CreateEvent from "@/src/components/modal/CreateEvent";
+import { getUserDetatils } from "@/src/utils/quries/userQuery";
 
 const profile = () => {
   const [selectedSection, setSelectedSection] = useState("event");
   const [modalVisible, setModalVisible] = useState(false);
   const { user } = useAuth();
 
-  const { data: userData, isLoading } = useQuery({
-    queryKey: [`user_${user?.id}`],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("full_name, username, email")
-        .eq("id", user?.id)
-        .single();
-      return data;
-    },
-  });
+  const { data: userData, isLoading } = getUserDetatils(user?.id!);
 
   const userNameInitials = useMemo(
     () => getInitialLetter(userData?.full_name),
     [userData]
   );
 
-  if (isLoading) return <LoadData />
+  if (isLoading) return <LoadData />;
+
+  const renderSelectedSection = () => {
+    if (selectedSection === "event") return <Event />;
+    if (selectedSection === "task") return <Task />;
+    if (selectedSection === "invite") return <Invites />;
+  };
 
   return (
-    <SafeAreaView className="flex-1 bg-MainBackgroundColor justify-center items-center">
-      <View className="justify-center items-center mt-5">
-        {/* Rounded Box */}
-        <View className="w-full justify-center items-center">
-          <LinearGradient
-            colors={["#333333", "#000000"]}
-            className="h-28 w-28 rounded-full justify-center items-center overflow-hidden"
-          >
-            <Text className="font-semibold text-2xl tracking-widest text-white">
-              {userNameInitials}
-            </Text>
-          </LinearGradient>
-        </View>
-
+    <SafeAreaView className="flex-1 bg-MainBackgroundColor px-4 pt-5">
+      <View className="flex-row justify-between ">
         {/* User Detatils */}
-        <View className="mt-3 items-center">
-          <Text className="text-white font-medium text-xl">
-            {userData?.full_name}
+        <View className="w-[70%]">
+          <Text className="text-white font-semibold text-2xl" numberOfLines={2}>
+            Hii, {userData?.full_name}
           </Text>
-          <Text className="text-white font-medium text-xl">
+          <Text className="text-white font-medium leading-5">
             {userData?.username}
           </Text>
-          <Text className="text-white font-medium text-xl">
+          <Text className="text-white font-medium leading-5">
             {userData?.email}
           </Text>
+
+          <TouchableOpacity
+            onPress={() => setModalVisible(true)}
+            className="bg-[#e6e6e6] self-start justify-center items-center rounded-md px-2 py-1 mt-2"
+          >
+            <Text>Create Event</Text>
+          </TouchableOpacity>
         </View>
 
-        <TouchableOpacity
-          onPress={() => setModalVisible(true)}
-          className="flex-row items-center gap-3 border py-1 px-3 rounded-md border-BorderColor mt-2"
-        >
-          <Text className="text-SecondaryTextColor font-medium">Create Event</Text>
-          <Ionicons name="create" size={20} color="#c8c8c8" />
-        </TouchableOpacity>
+        {/* Profile Image */}
+        <View>
+          {userData?.avatar_url ? (
+            <Image 
+              source={{ uri: userData.avatar_url }}
+              style={{
+                height: 112,
+                width: 112,
+                borderRadius: 100
+              }}
+              resizeMode="cover"
+            />
+          ) : (
+            <LinearGradient
+              colors={["#333333", "#000000"]}
+              className="h-28 w-28 rounded-full justify-center items-center overflow-hidden"
+            >
+              <Text className="font-semibold text-2xl tracking-widest text-white">
+                {userNameInitials}
+              </Text>
+            </LinearGradient>
+          )}
+        </View>
       </View>
 
+      {/* Selected Section Button */}
       <View className="flex-1 w-full mt-4 items-center">
         <View className="p-2 rounded-xl space-x-2 flex-row bg-[#000]">
           <Pressable
@@ -122,17 +140,11 @@ const profile = () => {
           </Pressable>
         </View>
 
-        <View className="w-full">
-          {selectedSection === "event" && <Event />}
-
-          {selectedSection === "task" && <Task />}
-
-          {selectedSection === "invite" && <Invites />}
-        </View>
+        <View className="w-full">{renderSelectedSection()}</View>
       </View>
 
       {modalVisible && (
-        <CreateEvent 
+        <CreateEvent
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
         />

@@ -48,7 +48,7 @@ export type GuestDetailsType = {
 export type CreateEventFormData = {
     name: string;
     description: string;
-    date: string;
+    date: null;
     event_time: string | null;
     latitude: number | null;
     longitude: number | null;
