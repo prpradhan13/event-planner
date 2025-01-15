@@ -56,10 +56,6 @@ export const updateUserProfile = ({
   return useMutation({
     mutationFn: async ({ profileImage }: { profileImage: string }) => {
       if (!profileImage) {
-        alert("You are not Authorized to update your profile!");
-      }
-
-      if (!profileImage) {
         alert("Please select a Image");
       }
 

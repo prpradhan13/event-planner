@@ -1,24 +1,19 @@
 import {
   ActivityIndicator,
-  FlatList,
   Image,
   Pressable,
-  ScrollView,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import React, { useMemo, useState } from "react";
-import { supabase } from "@/src/utils/supabase";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "@/src/context/AuthProvider";
-import { useQuery } from "@tanstack/react-query";
 import Event from "@/src/components/profileScreens/Event";
 import Task from "@/src/components/profileScreens/Task";
 import Invites from "@/src/components/profileScreens/Invites";
 import getInitialLetter from "@/src/utils/initialLetter";
 import { LinearGradient } from "expo-linear-gradient";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import LoadData from "@/src/components/smallHelping/LoadData";
 import CreateEvent from "@/src/components/modal/CreateEvent";
 import { getUserDetatils, updateUserProfile } from "@/src/utils/quries/userQuery";

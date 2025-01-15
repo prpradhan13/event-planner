@@ -1,4 +1,11 @@
-import { Image, ScrollView, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 import React, { useEffect, useMemo, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import getInitialLetter from "@/src/utils/initialLetter";
@@ -7,17 +14,26 @@ import { LinearGradient } from "expo-linear-gradient";
 import dayjs from "dayjs";
 import Mapview, { Marker } from "react-native-maps";
 import TotalGuests from "@/src/components/smallHelping/TotalGuests";
-import { singleEventDetails } from "@/src/utils/quries/eventQurery";
+import {
+  singleEventDetails,
+  updateEventImage,
+} from "@/src/utils/quries/eventQurery";
 import Entypo from "@expo/vector-icons/Entypo";
 import { useAuth } from "@/src/context/AuthProvider";
 import EventTaskBtn from "@/src/components/smallHelping/EventTaskBtn";
 import { locationName } from "@/src/utils/services/locationName";
+import * as ImagePicker from "expo-image-picker";
+import { MAX_IMAGE_FILE_SIZE } from "@/src/utils/constants/constants";
 
 const SingleEvent = () => {
+  const [selectedEventImage, setSelectedEventImage] = useState<string | null>(
+    null
+  );
   const { user } = useAuth();
   const { id } = useLocalSearchParams();
   const singleId = Array.isArray(id) ? id[0] : id;
 
+  if (!singleId) return null;
   const { data, isLoading } = singleEventDetails(singleId);
   const [placeName, setPlaceName] = useState<string | null>(null);
 
@@ -28,7 +44,7 @@ const SingleEvent = () => {
 
   useEffect(() => {
     if (data?.latitude && data?.longitude) {
-      (async () => {
+      const fetchLocationName = async () => {
         try {
           const name = await locationName({
             latitude: Number(data.latitude),
@@ -39,40 +55,86 @@ const SingleEvent = () => {
           console.error("Error fetching location name:", error);
           setPlaceName("Unknown Location");
         }
-      })();
+      };
+      fetchLocationName();
     }
   }, [data?.latitude, data?.longitude]);
+
+  const handleEventImagePick = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const assets = result.assets[0];
+      if (assets.fileSize && assets.fileSize > MAX_IMAGE_FILE_SIZE) {
+        alert(
+          "The selected image is too large. Please choose an image smaller than 5 MB."
+        );
+        return;
+      }
+
+      setSelectedEventImage(result.assets[0].uri);
+    }
+  };
+
+  const { mutate, isPending } = updateEventImage({
+    eventId: singleId,
+    userId: user?.id!,
+    setSelectedEventImage,
+  });
+
+  const handleEventImageUpdate = () => {
+    if (selectedEventImage === null) {
+      return;
+    }
+
+    mutate({ imageUri: selectedEventImage });
+  };
 
   if (isLoading) return <LoadData />;
 
   return (
     <View className="flex-1 bg-MainBackgroundColor px-4">
       <ScrollView showsVerticalScrollIndicator={false}>
-        {data?.image_url ? (
-          <Image
-            source={{ uri: data.image_url }}
-            style={{
-              width: "100%",
-              height: 260,
-              borderRadius: 10,
-            }}
-          />
-        ) : (
-          <LinearGradient
-            colors={["#333333", "#000000"]}
-            style={{
-              borderRadius: 10,
-              height: 200,
-              justifyContent: "center",
-              alignItems: "center",
-              overflow: "hidden",
-            }}
-          >
-            <Text className="text-PrimaryTextColor text-2xl font-semibold tracking-widest">
-              {eventInitialLetter}
-            </Text>
-          </LinearGradient>
-        )}
+        <View className="relative">
+          {data?.image_url ? (
+            <Image
+              source={{ uri: data.image_url }}
+              style={{
+                width: "100%",
+                height: 260,
+                borderRadius: 10,
+              }}
+            />
+          ) : (
+            <LinearGradient
+              colors={["#333333", "#000000"]}
+              style={{
+                borderRadius: 10,
+                height: 200,
+                justifyContent: "center",
+                alignItems: "center",
+                overflow: "hidden",
+              }}
+            >
+              <Text className="text-PrimaryTextColor text-2xl font-semibold tracking-widest">
+                {eventInitialLetter}
+              </Text>
+            </LinearGradient>
+          )}
+
+          {data?.user_id === user?.id && (
+            <Pressable
+              onPress={handleEventImagePick}
+              className="bg-[#f1f1f1] w-10 h-10 justify-center items-center rounded-full absolute top-1 right-1"
+            >
+              <Entypo name="camera" size={20} color="black" />
+            </Pressable>
+          )}
+        </View>
 
         <View className="mt-5">
           <View className="flex-row items-start gap-3">
@@ -132,6 +194,44 @@ const SingleEvent = () => {
           </Mapview>
         </View>
       </ScrollView>
+      {selectedEventImage && (
+        <View className="absolute h-screen w-[100vw] top-0 right-0 bg-[#000000a7] px-4 justify-center">
+          <View className="bg-[#4a4a4a] p-5 rounded-md justify-center items-center">
+            <Image
+              source={{ uri: selectedEventImage }}
+              style={{
+                height: 260,
+                width: "100%",
+                borderRadius: 10,
+              }}
+              resizeMode="cover"
+            />
+
+            <Text className="text-[#fff] font-medium text-lg mt-5">
+              Are you sure to update?
+            </Text>
+            <View className="flex-row gap-5">
+              <Pressable
+                onPress={() => setSelectedEventImage(null)}
+                className="bg-red-500 px-4 py-2 rounded-md"
+              >
+                <Text className="text-[#000] font-medium">Cancle</Text>
+              </Pressable>
+              <Pressable
+                onPress={handleEventImageUpdate}
+                disabled={isPending}
+                className="bg-[#fff] px-4 py-2 rounded-md"
+              >
+                {isPending ? (
+                  <ActivityIndicator />
+                ) : (
+                  <Text className="text-[#000] font-medium">Update</Text>
+                )}
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      )}
     </View>
   );
 };

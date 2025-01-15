@@ -4,6 +4,7 @@ import { supabase } from "../supabase";
 import * as FileSystem from "expo-file-system";
 import { decode } from "base64-arraybuffer";
 import { Dispatch, SetStateAction } from "react";
+import { useAuth } from "@/src/context/AuthProvider";
 
 export const getUserEvents = (userId?: string) => {
   return useQuery<EventsType[]>({
@@ -43,12 +44,12 @@ export const allEvents = () => {
   });
 };
 
-export const singleEventDetails = (eventId?: string) => {
+export const singleEventDetails = (eventId: string) => {
   return useQuery<EventsType>({
     queryKey: [`eventDetails_${eventId}`],
     queryFn: async () => {
       if (!eventId) {
-        throw new Error("Event ID is required to fetch events.");
+        alert("Event ID is required to fetch events.");
       }
 
       const { data, error } = await supabase
@@ -58,7 +59,7 @@ export const singleEventDetails = (eventId?: string) => {
         .single();
 
       if (error) {
-        throw new Error(error.message);
+        alert("Error" + error.message);
       }
 
       return data || {};
@@ -71,7 +72,7 @@ export const createEvent = ({
   formData,
   userId,
   setModalVisible,
-  resetForm
+  resetForm,
 }: {
   formData: CreateEventFormData;
   userId?: string;
@@ -134,7 +135,66 @@ export const createEvent = ({
     },
     onError: (error: any) => {
       console.error("Error creating event:", error);
-      alert(`Failed to create event: ${error.message || "Unknown error occurred"}`);
+      alert(
+        `Failed to create event: ${error.message || "Unknown error occurred"}`
+      );
+    },
+  });
+};
+
+export const updateEventImage = ({
+  eventId,
+  userId,
+  setSelectedEventImage,
+}: {
+  eventId: string;
+  userId: string;
+  setSelectedEventImage: Dispatch<SetStateAction<string | null>>;
+}) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ imageUri }: { imageUri: string }) => {
+      if (!imageUri) {
+        alert("Please select a Image");
+      }
+
+      // Upload Image
+      const base64 = await FileSystem.readAsStringAsync(imageUri, {
+        encoding: "base64",
+      });
+      const fileName = `${userId}/${new Date().getTime()}.jpeg`;
+
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from("event-images")
+        .update(fileName, decode(base64), {
+          contentType: "image/jpeg",
+        });
+
+      if (uploadError) {
+        alert("Error: " + uploadError.message);
+      }
+
+      const imageUrl = supabase.storage
+        .from("event-images")
+        .getPublicUrl(fileName).data.publicUrl;
+
+      const { data, error } = await supabase
+        .from("events")
+        .update({ image_url: imageUrl })
+        .eq("id", eventId);
+
+      if (error) {
+        alert("Error" + error.message);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`eventDetails_${eventId}`] });
+      queryClient.invalidateQueries({ queryKey: ["all_events"] });
+      queryClient.invalidateQueries({ queryKey: [`events_${userId}`] });
+
+      setSelectedEventImage(null);
+      alert("Successfully updated event Image.");
     },
   });
 };
