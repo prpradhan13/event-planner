@@ -77,15 +77,15 @@ const SingleEvent = () => {
         <View className="mt-5">
           <View className="flex-row items-start gap-3">
             <Entypo name="calendar" size={18} color="#c8c8c8" />
-            <View>
-              <Text className="text-SecondaryTextColor font-medium text-base leading-5">
-                {dayjs(data?.date).format("dddd, D MMM YYYY")}
-              </Text>
+            <View className="flex-row gap-2 items-center">
               {data?.event_time && (
-                <Text className="text-SecondaryTextColor font-medium text-base">
+                <Text className="text-SecondaryTextColor font-medium text-base leading-5">
                   {dayjs(`1970-01-01T${data?.event_time}`).format("hh:mm A")}
                 </Text>
               )}
+              <Text className="text-SecondaryTextColor font-medium text-base leading-5">
+                {dayjs(data?.date).format("dddd, D MMM YYYY")}
+              </Text>
             </View>
           </View>
 

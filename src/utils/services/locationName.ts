@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { LogBox } from 'react-native';
 
 
 export const locationName = async ({latitude,longitude}: {latitude?: number ,longitude?: number}) => {
@@ -10,8 +11,8 @@ export const locationName = async ({latitude,longitude}: {latitude?: number ,lon
 
     try {
         const { data } = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${API_KEY}`);
-
-        return data?.results[0].address_components[0].short_name;
+        
+        return data?.results[0].address_components[0].long_name;
 
     } catch (error) {
         console.error(error);
