@@ -54,3 +54,11 @@ export type CreateEventFormData = {
     longitude: number | null;
     imageUri: string | null;
 }
+
+export type CreateEventTasksFormData = {
+    task_name: string;
+    description?: string;
+    due_date: string | null;
+    event_id: number;
+    assigned_to: string | null;
+}

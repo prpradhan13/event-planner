@@ -1,10 +1,11 @@
 import { FlatList, Modal, Pressable, Text, View } from "react-native";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { tasksForEvent } from "@/src/utils/quries/taskQuery";
 import LoadData from "../smallHelping/LoadData";
 import UserNameBtn from "../smallHelping/UserNameBtn";
 import AntDesign from '@expo/vector-icons/AntDesign';
+import CreateTask from "./CreateTask";
 
 interface EventTaskProps {
   taskModalVisible: boolean;
@@ -17,6 +18,7 @@ const EventTask = ({
   setTaskModalVisible,
   eventId,
 }: EventTaskProps) => {
+  const [createTaskOpen, setCreateTaskOpen] = useState(false);
   const { data, isLoading } = tasksForEvent(eventId);
 
   return (
@@ -34,12 +36,21 @@ const EventTask = ({
           </View>
 
             <Pressable
+              onPress={() => setCreateTaskOpen(true)}
               className="bg-white rounded-md px-2 flex-row items-center gap-1"
             >
               <AntDesign name="plus" size={18} color="black" />
               <Text className="font-medium">Add</Text>
             </Pressable>
         </View>
+
+        {createTaskOpen && (
+          <CreateTask 
+            modalVisible={createTaskOpen}
+            setModalVisible={setCreateTaskOpen}
+            eventId={eventId!}
+          />
+        )}
         
         <FlatList
           data={data}

@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../supabase";
-import { TaskTypes } from "@/src/types/eventType";
+import { CreateEventTasksFormData, TaskTypes } from "@/src/types/eventType";
 import { TaskStatusChangeProps } from "@/src/types/extraTypes";
+import { Dispatch, SetStateAction } from "react";
 
 export const taskQuery = (userId?: string) => {
   return useQuery<TaskTypes[]>({
@@ -74,7 +75,7 @@ export const tasksForEvent = (eventId?: number) => {
 };
 
 export const taskStatusChange = ({ taskId, newStatus, userId, setAlertOpen }: TaskStatusChangeProps) => {
-    const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async () => {
@@ -96,3 +97,24 @@ export const taskStatusChange = ({ taskId, newStatus, userId, setAlertOpen }: Ta
     }
   });
 };
+
+export const addTask = (eventId: number, setModalVisible: Dispatch<SetStateAction<boolean>>) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ formData }: {formData: CreateEventTasksFormData}) => {
+      const { error } = await supabase
+        .from("event_tasks")
+        .insert([formData])
+
+      if (error) {
+        throw new Error(error.message);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`tasks_${eventId}`] })
+      setModalVisible(false);
+      alert("Task Add successfully")
+    }
+  })
+}
