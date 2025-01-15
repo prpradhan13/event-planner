@@ -21,19 +21,57 @@ import { LinearGradient } from "expo-linear-gradient";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import LoadData from "@/src/components/smallHelping/LoadData";
 import CreateEvent from "@/src/components/modal/CreateEvent";
-import { getUserDetatils } from "@/src/utils/quries/userQuery";
+import { getUserDetatils, updateUserProfile } from "@/src/utils/quries/userQuery";
+import Entypo from "@expo/vector-icons/Entypo";
+import * as ImagePicker from "expo-image-picker";
+import { MAX_IMAGE_FILE_SIZE } from "@/src/utils/constants/constants";
 
 const profile = () => {
   const [selectedSection, setSelectedSection] = useState("event");
   const [modalVisible, setModalVisible] = useState(false);
-  const { user } = useAuth();
+  const [selectedProfileImage, setSelectedProfileImage] = useState<
+    string | null
+  >(null);
 
+  const { user } = useAuth();
   const { data: userData, isLoading } = getUserDetatils(user?.id!);
+  const { mutate, isPending } = updateUserProfile({ userId: user?.id!, setSelectedProfileImage });
 
   const userNameInitials = useMemo(
     () => getInitialLetter(userData?.full_name),
     [userData]
   );
+
+  const handleProfileImagePick = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const assets = result.assets[0];
+      if (assets.fileSize && assets.fileSize > MAX_IMAGE_FILE_SIZE) {
+        alert(
+          "The selected image is too large. Please choose an image smaller than 5 MB."
+        );
+        return;
+      }
+
+      setSelectedProfileImage(result.assets[0].uri);
+    }
+  };
+
+  const handleProileImageUpdate = () => {
+    if (selectedProfileImage === null) {
+      return;
+    }
+    mutate({ profileImage: selectedProfileImage });
+  };
+
+  const handleCancleUpdateImage = () => {
+    setSelectedProfileImage(null);
+  };
 
   if (isLoading) return <LoadData />;
 
@@ -67,14 +105,14 @@ const profile = () => {
         </View>
 
         {/* Profile Image */}
-        <View>
+        <View className="relative">
           {userData?.avatar_url ? (
-            <Image 
+            <Image
               source={{ uri: userData.avatar_url }}
               style={{
                 height: 112,
                 width: 112,
-                borderRadius: 100
+                borderRadius: 100,
               }}
               resizeMode="cover"
             />
@@ -88,6 +126,13 @@ const profile = () => {
               </Text>
             </LinearGradient>
           )}
+
+          <Pressable
+            onPress={handleProfileImagePick}
+            className="bg-[#f1f1f1] w-9 h-9 border-2 border-MainBackgroundColor justify-center items-center rounded-full absolute bottom-0 right-1"
+          >
+            <Entypo name="camera" size={20} color="black" />
+          </Pressable>
         </View>
       </View>
 
@@ -142,6 +187,44 @@ const profile = () => {
 
         <View className="w-full">{renderSelectedSection()}</View>
       </View>
+
+      {selectedProfileImage && (
+        <View className="absolute h-screen w-[100vw] top-0 right-0 bg-[#000000a7] px-4 justify-center">
+          <View className="bg-[#4a4a4a] p-5 rounded-md justify-center items-center">
+            <Image
+              source={{ uri: selectedProfileImage }}
+              style={{
+                height: 112,
+                width: 112,
+                borderRadius: 100,
+              }}
+              resizeMode="cover"
+            />
+
+            <Text className="text-[#fff] font-medium text-lg mt-5">
+              Are you sure to update?
+            </Text>
+            <View className="flex-row gap-5">
+              <Pressable
+                onPress={handleCancleUpdateImage}
+                className="bg-red-500 px-4 py-2 rounded-md"
+              >
+                <Text className="text-[#000] font-medium">Cancle</Text>
+              </Pressable>
+              <Pressable
+                onPress={handleProileImageUpdate}
+                className="bg-[#fff] px-4 py-2 rounded-md"
+              >
+                {isPending ? (
+                  <ActivityIndicator />
+                ) : (
+                  <Text className="text-[#000] font-medium">Update</Text>
+                )}
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      )}
 
       {modalVisible && (
         <CreateEvent

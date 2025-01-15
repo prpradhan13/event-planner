@@ -98,8 +98,7 @@ export const createEvent = ({
         });
 
       if (uploadError) {
-        // console.log(uploadError);
-        throw new Error(uploadError.message);
+        alert("Error" + uploadError.message);
       }
 
       const imageUrl = supabase.storage
@@ -121,7 +120,7 @@ export const createEvent = ({
       ]);
 
       if (error) {
-        throw new Error(error.message);
+        alert("Error" + error.message);
       }
     },
     onSuccess: () => {
