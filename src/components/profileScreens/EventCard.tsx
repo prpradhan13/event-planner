@@ -23,9 +23,11 @@ const EventCard = ({ dataList }: EventCardProps) => {
       className="bg-SecondaryBackgroundColor p-3 rounded-xl flex-row gap-5 items-center"
     >
       <View className="w-[55%]">
-        <Text className="text-green-500 text-sm">
-          {dayjs(dataList.date).format("DD/MM/YYYY")}
-        </Text>
+        <View className="flex-row gap-3 items-center">
+          <Text className="text-green-500 text-sm">
+            {dayjs(dataList.date).format("DD/MM/YYYY")}
+          </Text>
+        </View>
 
         <Text
           className="text-PrimaryTextColor text-xl font-medium"

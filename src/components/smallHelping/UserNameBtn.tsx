@@ -19,11 +19,11 @@ const UserNameBtn = ({ userId }: UserNameBtnProps) => {
     <TouchableOpacity className="flex-row items-center gap-2 bg-[#5d5d5d] self-start px-2 py-1 rounded-md">
       <FontAwesome name="user" size={16} color="#eee" />
       {data?.full_name === user?.user_metadata.full_name ? (
-        <Text className="text-PrimaryTextColor capitalize font-medium">
+        <Text className="text-PrimaryTextColor capitalize font-medium text-sm">
           You
         </Text>
       ) : (
-        <Text className="text-PrimaryTextColor capitalize font-medium">
+        <Text className="text-PrimaryTextColor capitalize font-medium text-sm">
           {data?.full_name}
         </Text>
       )}

@@ -9,7 +9,7 @@ export type EventsType = {
     latitude?: string;
     longitude?: string;
     status: string;
-    isPublic: boolean;
+    ispublic: boolean;
 }
 
 export type EventCardProps = {

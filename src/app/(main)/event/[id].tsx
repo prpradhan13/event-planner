@@ -24,11 +24,15 @@ import EventTaskBtn from "@/src/components/smallHelping/EventTaskBtn";
 import { locationName } from "@/src/utils/services/locationName";
 import * as ImagePicker from "expo-image-picker";
 import { MAX_IMAGE_FILE_SIZE } from "@/src/utils/constants/constants";
+import EventPublicStateAlert from "@/src/components/smallHelping/EventPublicStateAlert";
 
 const SingleEvent = () => {
   const [selectedEventImage, setSelectedEventImage] = useState<string | null>(
     null
   );
+  const [selectedEventToUpdatePublic, setSelectedEventToUpdatePublic] =
+    useState<number | null>(null);
+
   const { user } = useAuth();
   const { id } = useLocalSearchParams();
   const singleId = Array.isArray(id) ? id[0] : id;
@@ -93,7 +97,7 @@ const SingleEvent = () => {
 
     mutate({ imageUri: selectedEventImage });
   };
-
+  
   if (isLoading) return <LoadData />;
 
   return (
@@ -137,7 +141,18 @@ const SingleEvent = () => {
         </View>
 
         <View className="mt-5">
-          <View className="flex-row items-start gap-3">
+          {data?.user_id === user?.id && (
+            <Pressable
+              onPress={() => setSelectedEventToUpdatePublic(data?.id!)}
+              className="border border-BorderColor rounded-md w-36 py-1"
+            >
+              <Text className="text-white text-center">
+                {data?.ispublic ? "Public Event" : "Private Event"}
+              </Text>
+            </Pressable>
+          )}
+
+          <View className="flex-row items-start gap-3 mt-3">
             <Entypo name="calendar" size={18} color="#c8c8c8" />
             <View className="flex-row gap-2 items-center">
               {data?.event_time && (
@@ -194,6 +209,7 @@ const SingleEvent = () => {
           </Mapview>
         </View>
       </ScrollView>
+
       {selectedEventImage && (
         <View className="absolute h-screen w-[100vw] top-0 right-0 bg-[#000000a7] px-4 justify-center">
           <View className="bg-[#4a4a4a] p-5 rounded-md justify-center items-center">
@@ -213,24 +229,32 @@ const SingleEvent = () => {
             <View className="flex-row gap-5">
               <Pressable
                 onPress={() => setSelectedEventImage(null)}
-                className="bg-red-500 px-4 py-2 rounded-md"
+                className="bg-red-500 w-24 py-2 rounded-md"
               >
-                <Text className="text-[#000] font-medium">Cancle</Text>
+                <Text className="text-[#000] font-medium text-center">Cancle</Text>
               </Pressable>
               <Pressable
                 onPress={handleEventImageUpdate}
                 disabled={isPending}
-                className="bg-[#fff] px-4 py-2 rounded-md"
+                className="bg-[#fff] w-24 py-2 rounded-md"
               >
                 {isPending ? (
                   <ActivityIndicator />
                 ) : (
-                  <Text className="text-[#000] font-medium">Update</Text>
+                  <Text className="text-[#000] font-medium text-center">Update</Text>
                 )}
               </Pressable>
             </View>
           </View>
         </View>
+      )}
+
+      {selectedEventToUpdatePublic && (
+        <EventPublicStateAlert 
+          selectedEventToUpdatePublic={selectedEventToUpdatePublic}
+          setSelectedEventToUpdatePublic={setSelectedEventToUpdatePublic}
+          publicState={data?.ispublic!}
+        />
       )}
     </View>
   );

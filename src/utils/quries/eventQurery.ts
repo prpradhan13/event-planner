@@ -198,3 +198,32 @@ export const updateEventImage = ({
     },
   });
 };
+
+export const updateEventPublicState = (
+  eventId: number,
+  setSelectedEventToUpdatePublic: Dispatch<SetStateAction<number | null>>
+) => {
+  const { user } = useAuth();
+  const userId = user?.id;
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ publicState }: { publicState: boolean }) => {
+      const { error } = await supabase
+        .from("events")
+        .update({ ispublic: publicState })
+        .eq("id", eventId);
+
+      if (error) {
+        alert("Error" + error.message);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`events_${userId}`] });
+      queryClient.invalidateQueries({ queryKey: [`all_events`] });
+      queryClient.invalidateQueries({ queryKey: [`eventDetails_${eventId}`] });
+      setSelectedEventToUpdatePublic(null);
+      alert("Successfully update event");
+    },
+  });
+};
