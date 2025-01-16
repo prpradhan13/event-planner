@@ -1,16 +1,12 @@
 import {
-  FlatList,
   Modal,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { guestDetails, guestQuery } from "@/src/utils/quries/guestQuery";
-import GuestListCard from "../smallHelping/GuestListCard";
-import GuestListLoading from "../loader/GuestListLoading";
+import { guestQuery } from "@/src/utils/quries/guestQuery";
 import Entypo from "@expo/vector-icons/Entypo";
 import AllUserList from "./AllUserList";
 import { useAuth } from "@/src/context/AuthProvider";

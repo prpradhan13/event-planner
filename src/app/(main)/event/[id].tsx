@@ -126,7 +126,7 @@ const SingleEvent = () => {
 
   const renderPublicBtn = () => {
     if (userInGuestList?.status === "invited") return <EventPageBtn onPress={handleRenderedBtnPress} btnName="invited"/>;
-    if (userInGuestList?.status === "accepted") return <EventPageBtn onPress={handleRenderedBtnPress} btnName="accepted"/>;
+    if (userInGuestList?.status === "accepted") return <EventPageBtn onPress={handleRenderedBtnPress} btnName="request accepted"/>;
     if (userInGuestList?.status === "request") return <EventPageBtn onPress={handleRejectInvitation} btnName="request send"/>;
     if (!userInGuestList) return <EventPageBtn onPress={handleRenderedBtnPress} btnName="request"/>;
   }

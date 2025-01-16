@@ -33,6 +33,8 @@ const InvitedGuests = ({
             <GuestListCard
               guestId={item.guest_id}
               eventCreaterId={eventCreaterId}
+              invitationStatus={item.status}
+              invitationId={item.id}
             />
           )}
           ListEmptyComponent={() => (

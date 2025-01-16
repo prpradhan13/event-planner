@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Alert,
   Image,
   Pressable,
   Text,
@@ -23,6 +24,7 @@ import {
 import Entypo from "@expo/vector-icons/Entypo";
 import * as ImagePicker from "expo-image-picker";
 import { MAX_IMAGE_FILE_SIZE } from "@/src/utils/constants/constants";
+import { supabase } from "@/src/utils/supabase";
 
 const profile = () => {
   const [selectedSection, setSelectedSection] = useState("event");
@@ -82,6 +84,13 @@ const profile = () => {
     if (selectedSection === "invite") return <Invites />;
   };
 
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      Alert.alert("Error" + error.message)
+    }
+  }
+
   return (
     <SafeAreaView className="flex-1 bg-MainBackgroundColor px-4 pt-5">
       <View className="flex-row justify-between ">
@@ -105,7 +114,7 @@ const profile = () => {
               <Text>Create Event</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => setModalVisible(true)}
+              onPress={handleLogout}
               className="bg-red-500 self-start justify-center items-center rounded-md px-2 py-1 mt-2"
             >
               <Text>Logout</Text>
