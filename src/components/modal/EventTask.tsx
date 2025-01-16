@@ -88,7 +88,7 @@ const EventTask = ({
                   <Text className="text-PrimaryTextColor font-medium text-xl">
                     {index + 1}.{" "}
                   </Text>
-                  <View>
+                  <View className="w-[93%]">
                     <Text className="text-PrimaryTextColor font-medium text-xl">
                       {item.task_name}
                     </Text>
