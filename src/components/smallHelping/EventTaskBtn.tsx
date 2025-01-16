@@ -14,7 +14,7 @@ const EventTaskBtn = ({ eventId }: EventTaskBtnProps) => {
     <>
       <TouchableOpacity
         onPress={() => setTaskModalVisible(true)}
-        className="gap-2 flex-row items-center border py-1 px-3 rounded-md bg-[#ebebeb]"
+        className="gap-2 flex-row items-center py-1 px-3 rounded-md bg-[#ebebeb]"
       >
         <FontAwesome5 name="tasks" size={14} color="#000" />
         <Text className="text-[#000] font-medium text-base">

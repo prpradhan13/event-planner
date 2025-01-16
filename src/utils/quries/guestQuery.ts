@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../supabase";
 import { GuestDetailsType, GuestsType } from "@/src/types/eventType";
 import { Dispatch, SetStateAction } from "react";
+import { Alert } from "react-native";
 
 export const guestQuery = (eventId?: number) => {
   return useQuery<GuestsType[]>({
@@ -55,7 +56,7 @@ export const addGuest = (
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: async () => {
+    mutationFn: async ({ guestStatus }: {guestStatus?: string}) => {
       if (!userId) {
         throw new Error("User ID is required.");
       }
@@ -65,11 +66,11 @@ export const addGuest = (
 
       const { error } = await supabase
         .from("event_guests")
-        .insert({ guest_id: userId, event_id: eventId });
+        .insert({ guest_id: userId, event_id: eventId, status: guestStatus });
 
         if (error) {
             console.error(error.message);
-            alert("Failed to invite guest. Please try again.");
+            alert("Failed to add in guest list. Please try again.");
             throw new Error(error.message);
           }
           
@@ -83,3 +84,27 @@ export const addGuest = (
     },
   });
 };
+
+export const removeGuest = (setInvitationReject: Dispatch<SetStateAction<boolean>>) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ invitationId }: {invitationId: number}) => {
+      const { error } = await supabase
+        .from("event_guests")
+        .delete()
+        .eq("id", invitationId)
+
+      if (error) {
+        Alert.alert("Error", error.message)
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["guests"],
+      });
+      setInvitationReject(false);
+      Alert.alert("Request Removed.")
+    }
+  })
+}

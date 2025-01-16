@@ -19,7 +19,7 @@ const MainLayout = () => {
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen 
-          name="event/[id]" 
+          name="event/[id]"
           options={{
             headerShown: true,
             // headerTransparent: true,
@@ -28,7 +28,7 @@ const MainLayout = () => {
             },
             headerShadowVisible: false,
             headerTintColor: "#fff",
-            headerTitle: ""
+            headerTitle: "",
           }}
         />
       </Stack>

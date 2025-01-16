@@ -26,6 +26,10 @@ import { locationName } from "@/src/utils/services/locationName";
 import * as ImagePicker from "expo-image-picker";
 import { MAX_IMAGE_FILE_SIZE } from "@/src/utils/constants/constants";
 import UpdateAlert from "@/src/components/smallHelping/UpdateAlert";
+import RequestToEnterEvent from "@/src/components/smallHelping/RequestToEnterEvent";
+import { guestQuery } from "@/src/utils/quries/guestQuery";
+import EventPageBtn from "@/src/components/buttons/EventPageBtn";
+import InvitationRejectAlert from "@/src/components/smallHelping/InvitationRejectAlert";
 
 const SingleEvent = () => {
   const [selectedEventImage, setSelectedEventImage] = useState<string | null>(
@@ -33,6 +37,9 @@ const SingleEvent = () => {
   );
   const [selectedEventToUpdatePublic, setSelectedEventToUpdatePublic] =
     useState<number | null>(null);
+
+  const [requestToEnter, setRequestToEnter] = useState(false);
+  const [requestReject, setrequestReject] = useState(false);
 
   const { user } = useAuth();
   const { id } = useLocalSearchParams();
@@ -99,14 +106,38 @@ const SingleEvent = () => {
     mutate({ imageUri: selectedEventImage });
   };
 
-  const { mutate: updatePublicStateMutate, isPending: updatePublicStateIsPending } = updateEventPublicState(selectedEventToUpdatePublic!, setSelectedEventToUpdatePublic)
-  
+  const {
+    mutate: updatePublicStateMutate,
+    isPending: updatePublicStateIsPending,
+  } = updateEventPublicState(
+    selectedEventToUpdatePublic!,
+    setSelectedEventToUpdatePublic
+  );
+
   const handleEventPublicState = () => {
     const newPublicState = !data?.ispublic;
-    updatePublicStateMutate({ publicState: newPublicState })
+    updatePublicStateMutate({ publicState: newPublicState });
+  };
+
+  const { data: guestsList } = guestQuery(data?.id)
+  const userInGuestList = guestsList?.find((guest) => guest.guest_id === user?.id)
+  
+  if (isLoading) return <LoadData />;
+
+  const renderPublicBtn = () => {
+    if (userInGuestList?.status === "invited") return <EventPageBtn onPress={handleRenderedBtnPress} btnName="invited"/>;
+    if (userInGuestList?.status === "accepted") return <EventPageBtn onPress={handleRenderedBtnPress} btnName="accepted"/>;
+    if (userInGuestList?.status === "request") return <EventPageBtn onPress={handleRejectInvitation} btnName="request send"/>;
+    if (!userInGuestList) return <EventPageBtn onPress={handleRenderedBtnPress} btnName="request"/>;
   }
 
-  if (isLoading) return <LoadData />;
+  const handleRenderedBtnPress = () => {
+    setRequestToEnter(true)
+  }
+
+  const handleRejectInvitation = () => {
+    setrequestReject(true)
+  };
 
   return (
     <View className="flex-1 bg-MainBackgroundColor px-4">
@@ -187,12 +218,14 @@ const SingleEvent = () => {
           <Text className="text-SecondaryTextColor text-base leading-5">
             {data?.description}
           </Text>
+        </View>
 
-          <View className="flex-row gap-3 mt-4">
-            <TotalGuests eventId={data?.id} eventCreaterId={data?.user_id} />
+        <View className="flex-row gap-3 mt-4">
+          <TotalGuests eventId={data?.id} eventCreaterId={data?.user_id} />
 
-            {data?.user_id === user?.id && <EventTaskBtn eventId={data?.id} />}
-          </View>
+          {data?.user_id === user?.id && <EventTaskBtn eventId={data?.id} />}
+
+          {data?.ispublic && renderPublicBtn()}
         </View>
 
         <View className="rounded-xl mt-5">
@@ -239,7 +272,9 @@ const SingleEvent = () => {
                 onPress={() => setSelectedEventImage(null)}
                 className="bg-red-500 w-24 py-2 rounded-md"
               >
-                <Text className="text-[#000] font-medium text-center">Cancle</Text>
+                <Text className="text-[#000] font-medium text-center">
+                  Cancle
+                </Text>
               </Pressable>
               <Pressable
                 onPress={handleEventImageUpdate}
@@ -249,7 +284,9 @@ const SingleEvent = () => {
                 {isPending ? (
                   <ActivityIndicator />
                 ) : (
-                  <Text className="text-[#000] font-medium text-center">Update</Text>
+                  <Text className="text-[#000] font-medium text-center">
+                    Update
+                  </Text>
                 )}
               </Pressable>
             </View>
@@ -258,11 +295,30 @@ const SingleEvent = () => {
       )}
 
       {selectedEventToUpdatePublic && (
-        <UpdateAlert 
+        <UpdateAlert
           setSelectedToUpdate={setSelectedEventToUpdatePublic}
           isPending={updatePublicStateIsPending}
           onPress={handleEventPublicState}
         />
+      )}
+
+      {requestToEnter && (
+        <RequestToEnterEvent
+          setRequestToEnter={setRequestToEnter}
+          eventCreaterId={data?.user_id!}
+          eventId={data?.id!}
+        />
+      )}
+
+      {userInGuestList?.guest_id === user?.id && (
+        <>
+          {requestReject && (
+            <InvitationRejectAlert 
+              setInvitationReject={setrequestReject}
+              invitationId={userInGuestList?.id!}
+            />
+          )}
+        </>
       )}
     </View>
   );

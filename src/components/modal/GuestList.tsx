@@ -14,6 +14,7 @@ import GuestListLoading from "../loader/GuestListLoading";
 import Entypo from "@expo/vector-icons/Entypo";
 import AllUserList from "./AllUserList";
 import { useAuth } from "@/src/context/AuthProvider";
+import InvitedGuests from "../flatLists/InvitedGuests";
 
 interface GuestListProps {
   modalVisible: boolean;
@@ -30,13 +31,44 @@ const GuestList = ({
 }: GuestListProps) => {
   const [allUserListOpen, setAllUserListOpen] = useState(false);
   const [showUserListOpen, setShowUserListOpen] = useState("accepted");
-  const { data, isLoading } = guestQuery(eventId);
-
   const { user } = useAuth();
+  const { data, isLoading } = guestQuery(eventId);
 
   const inviteAcceptMembers = data?.filter(
     (guest) => guest.status === "accepted"
   );
+
+  const requestsMembers = data?.filter((guest) => guest.status === "request");
+
+  const renderSelectedSection = () => {
+    if (showUserListOpen === "invited")
+      return (
+        <InvitedGuests
+          data={data}
+          eventCreaterId={eventCreaterId!}
+          nameOfListIfEmpty="No Guets Invited yet!"
+        />
+      );
+
+    if (showUserListOpen === "accepted")
+      return (
+        <InvitedGuests
+          data={inviteAcceptMembers}
+          eventCreaterId={eventCreaterId!}
+          isLoading={isLoading}
+          nameOfListIfEmpty="Nobody Accepts yet!"
+        />
+      );
+
+    if (showUserListOpen === "request")
+      return (
+        <InvitedGuests
+          data={requestsMembers}
+          eventCreaterId={eventCreaterId!}
+          nameOfListIfEmpty="No Requests comes yet!"
+        />
+      );
+  };
 
   return (
     <Modal visible={modalVisible} animationType="slide">
@@ -71,71 +103,58 @@ const GuestList = ({
         {eventCreaterId === user?.id && (
           <View className="flex-row gap-3 mt-4">
             <TouchableOpacity
-              onPress={() => setShowUserListOpen("invited")}
-              className={`${showUserListOpen === 'invited' ? "bg-SecondaryTextColor" : ""} rounded-md p-1`}
+              onPress={() => setShowUserListOpen("accepted")}
+              className={`${
+                showUserListOpen === "accepted" ? "bg-SecondaryTextColor" : ""
+              } rounded-md p-1`}
             >
-              <Text className={`${showUserListOpen === 'invited' ? "text-[#000]" : "text-blue-500"}`}>Invited Guests</Text>
+              <Text
+                className={`${
+                  showUserListOpen === "accepted"
+                    ? "text-[#000]"
+                    : "text-blue-500"
+                }`}
+              >
+                Invite Accepte
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setShowUserListOpen("invited")}
+              className={`${
+                showUserListOpen === "invited" ? "bg-SecondaryTextColor" : ""
+              } rounded-md p-1`}
+            >
+              <Text
+                className={`${
+                  showUserListOpen === "invited"
+                    ? "text-[#000]"
+                    : "text-blue-500"
+                }`}
+              >
+                Invited Guests
+              </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity 
-              onPress={() => setShowUserListOpen("accepted")}
-              className={`${showUserListOpen === 'accepted' ? "bg-SecondaryTextColor" : ""} rounded-md p-1`}
+            <TouchableOpacity
+              onPress={() => setShowUserListOpen("request")}
+              className={`${
+                showUserListOpen === "request" ? "bg-SecondaryTextColor" : ""
+              } rounded-md p-1`}
             >
-              <Text className={`${showUserListOpen === 'accepted' ? "text-[#000]" : "text-blue-500"}`}>
-                Invited Guests
+              <Text
+                className={`${
+                  showUserListOpen === "request"
+                    ? "text-[#000]"
+                    : "text-blue-500"
+                }`}
+              >
+                Requests
               </Text>
             </TouchableOpacity>
           </View>
         )}
 
-        {showUserListOpen === "invited" ? (
-          <FlatList
-            data={data}
-            keyExtractor={(item) => item.id.toString()}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              gap: 10,
-              paddingTop: 10,
-              paddingBottom: 100,
-            }}
-            renderItem={({ item }) => <GuestListCard guestId={item.guest_id} />}
-            ListEmptyComponent={() => (
-              <View className="h-[80vh] w-full justify-center items-center">
-                <Text className="text-[#8c8c8c] font-medium text-lg">
-                  No Guesets Invited
-                </Text>
-              </View>
-            )}
-          />
-        ) : showUserListOpen === "accepted" ? (
-          <>
-            {isLoading ? (
-              <GuestListLoading />
-            ) : (
-              <FlatList
-                data={inviteAcceptMembers}
-                keyExtractor={(item) => item.id.toString()}
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={{
-                  gap: 10,
-                  paddingVertical: 10,
-                }}
-                renderItem={({ item }) => (
-                  <GuestListCard guestId={item.guest_id} eventCreaterId={eventCreaterId} />
-                )}
-                ListEmptyComponent={() => (
-                  <View className="h-[80vh] w-full justify-center items-center">
-                    <Text className="text-[#8c8c8c] font-medium text-lg">
-                      No Guesets Invited
-                    </Text>
-                  </View>
-                )}
-              />
-            )}
-          </>
-        ) : (
-          ""
-        )}
+        {renderSelectedSection()}
 
         {allUserListOpen && (
           <AllUserList

@@ -1,12 +1,11 @@
 import { ActivityIndicator, FlatList, View } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { allEvents } from "@/src/utils/quries/eventQurery";
+import { allPublicEvents } from "@/src/utils/quries/eventQurery";
 import EventCard from "@/src/components/profileScreens/EventCard";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
 const index = () => {
-  const { data, isLoading } = allEvents();
+  const { data, isLoading } = allPublicEvents();
 
   if (isLoading) {
     return (

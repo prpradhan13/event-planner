@@ -44,6 +44,21 @@ export const allEvents = () => {
   });
 };
 
+export const allPublicEvents = () => {
+  return useQuery<EventsType[]>({
+    queryKey: ["all_events"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("events").select("*").eq("ispublic", true);
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      return data || [];
+    },
+  });
+};
+
 export const singleEventDetails = (eventId: string) => {
   return useQuery<EventsType>({
     queryKey: [`eventDetails_${eventId}`],

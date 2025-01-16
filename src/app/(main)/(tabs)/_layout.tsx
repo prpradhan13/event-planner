@@ -1,8 +1,7 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import React from "react";
-import { Redirect, Tabs } from "expo-router";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { useAuth } from "@/src/context/AuthProvider";
+import { Tabs } from "expo-router";
+import Entypo from '@expo/vector-icons/Entypo';
 
 const TabLayout = () => {
   return (
@@ -24,7 +23,7 @@ const TabLayout = () => {
         options={{
           title: "Home",
           tabBarIcon: ({ focused }) => (
-            <FontAwesome
+            <Entypo
               name="home"
               size={26}
               color={focused ? "white" : "#ababab"}
@@ -37,7 +36,7 @@ const TabLayout = () => {
         options={{
           title: "Profile",
           tabBarIcon: ({ focused }) => (
-            <FontAwesome
+            <Entypo
               name="user"
               size={26}
               color={focused ? "white" : "#ababab"}

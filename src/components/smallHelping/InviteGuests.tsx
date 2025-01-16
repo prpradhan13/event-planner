@@ -27,7 +27,7 @@ const InviteGuests = ({
     setModalVisible
   );
   const handleInviteBtn = () => {
-    mutate();
+    mutate({ guestStatus: "invited" });
   };
 
   return (

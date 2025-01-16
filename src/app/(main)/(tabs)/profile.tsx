@@ -16,7 +16,10 @@ import getInitialLetter from "@/src/utils/initialLetter";
 import { LinearGradient } from "expo-linear-gradient";
 import LoadData from "@/src/components/smallHelping/LoadData";
 import CreateEvent from "@/src/components/modal/CreateEvent";
-import { getUserDetatils, updateUserProfile } from "@/src/utils/quries/userQuery";
+import {
+  getUserDetatils,
+  updateUserProfile,
+} from "@/src/utils/quries/userQuery";
 import Entypo from "@expo/vector-icons/Entypo";
 import * as ImagePicker from "expo-image-picker";
 import { MAX_IMAGE_FILE_SIZE } from "@/src/utils/constants/constants";
@@ -30,7 +33,10 @@ const profile = () => {
 
   const { user } = useAuth();
   const { data: userData, isLoading } = getUserDetatils(user?.id!);
-  const { mutate, isPending } = updateUserProfile({ userId: user?.id!, setSelectedProfileImage });
+  const { mutate, isPending } = updateUserProfile({
+    userId: user?.id!,
+    setSelectedProfileImage,
+  });
 
   const userNameInitials = useMemo(
     () => getInitialLetter(userData?.full_name),
@@ -91,12 +97,20 @@ const profile = () => {
             {userData?.email}
           </Text>
 
-          <TouchableOpacity
-            onPress={() => setModalVisible(true)}
-            className="bg-[#e6e6e6] self-start justify-center items-center rounded-md px-2 py-1 mt-2"
-          >
-            <Text>Create Event</Text>
-          </TouchableOpacity>
+          <View className="flex-row gap-3">
+            <TouchableOpacity
+              onPress={() => setModalVisible(true)}
+              className="bg-[#e6e6e6] self-start justify-center items-center rounded-md px-2 py-1 mt-2"
+            >
+              <Text>Create Event</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setModalVisible(true)}
+              className="bg-red-500 self-start justify-center items-center rounded-md px-2 py-1 mt-2"
+            >
+              <Text>Logout</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* Profile Image */}
