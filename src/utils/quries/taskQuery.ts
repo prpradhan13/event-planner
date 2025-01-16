@@ -78,10 +78,12 @@ export const tasksForEvent = (eventId?: number) => {
 export const taskStatusChange = ({
   taskId,
   newStatus,
-  userId,
+  eventId,
   setAlertOpen,
 }: TaskStatusChangeProps) => {
   const queryClient = useQueryClient();
+  const { user } = useAuth(); 
+  const userId = user?.id;
 
   return useMutation({
     mutationFn: async () => {
@@ -97,6 +99,9 @@ export const taskStatusChange = ({
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: userId ? [`tasks_${userId}`] : ["tasks"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [`tasks_${eventId}`]
       });
 
       setAlertOpen(false);
@@ -116,7 +121,7 @@ export const addTask = (
     }: {
       formData: CreateEventTasksFormData;
     }) => {
-      const { error } = await supabase.from("event_tasks").insert([formData]);
+      const { error } = await supabase.from("event_tasks").insert(formData);
 
       if (error) {
         alert("Error" + error.message);
@@ -133,7 +138,7 @@ export const addTask = (
 export const deleteTask = (taskId: number, eventId: number) => {
   const queryClient = useQueryClient();
   const { user } = useAuth();
-  const userId = user?.id
+  const userId = user?.id;
 
   return useMutation({
     mutationFn: async () => {
@@ -147,9 +152,11 @@ export const deleteTask = (taskId: number, eventId: number) => {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: userId ? [`tasks_${userId}`] : ["tasks"] })
-      queryClient.invalidateQueries({ queryKey: [`tasks_${eventId}`] })
+      queryClient.invalidateQueries({
+        queryKey: userId ? [`tasks_${userId}`] : ["tasks"],
+      });
+      queryClient.invalidateQueries({ queryKey: [`tasks_${eventId}`] });
       alert("Task Delete successfully");
     },
   });
-};
+}; 

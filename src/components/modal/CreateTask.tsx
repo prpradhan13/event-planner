@@ -2,24 +2,17 @@ import {
   ActivityIndicator,
   Modal,
   Pressable,
-  StyleSheet,
   Text,
   TextInput,
   View,
 } from "react-native";
-import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { CreateEventTasksFormData } from "@/src/types/eventType";
-import { useAuth } from "@/src/context/AuthProvider";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import GuestListCard from "../smallHelping/GuestListCard";
 import UserCardForTask from "../smallHelping/UserCardForTask";
-import { Image } from "react-native";
-import { getUserDetatils } from "@/src/utils/quries/userQuery";
-import getInitialLetter from "@/src/utils/initialLetter";
 import SingleUserDetailsCard from "../smallHelping/SingleUserDetailsCard";
 import { addTask } from "@/src/utils/quries/taskQuery";
-import { useQueryClient } from "@tanstack/react-query";
 
 interface CreateTaskProps {
   modalVisible: boolean;
@@ -32,8 +25,6 @@ const CreateTask = ({
   setModalVisible,
   eventId,
 }: CreateTaskProps) => {
-  const { user } = useAuth();
-
   const [formData, setFormData] = useState<CreateEventTasksFormData>({
     task_name: "",
     description: "",

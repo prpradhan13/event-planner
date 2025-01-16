@@ -1,12 +1,14 @@
 import { FlatList, Modal, Pressable, Text, View } from "react-native";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { tasksForEvent } from "@/src/utils/quries/taskQuery";
+import { tasksForEvent, taskStatusChange } from "@/src/utils/quries/taskQuery";
 import LoadData from "../smallHelping/LoadData";
 import UserNameBtn from "../smallHelping/UserNameBtn";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import CreateTask from "./CreateTask";
 import DeleteAlert from "../smallHelping/DeleteAlert";
+import dayjs from "dayjs";
+import UpdateAlert from "../smallHelping/UpdateAlert";
 
 interface EventTaskProps {
   taskModalVisible: boolean;
@@ -21,7 +23,22 @@ const EventTask = ({
 }: EventTaskProps) => {
   const [createTaskOpen, setCreateTaskOpen] = useState(false);
   const [deleteAlertOpen, setDeleteAlertOpen] = useState<number | null>(null);
+  const [taskIdForupdate, setTaskIdForupdate] = useState<number | null>(null);
+  const [taskStatus, setTaskStatus] = useState<string | null>(null);
   const { data, isLoading } = tasksForEvent(eventId);
+
+  const newStatus = taskStatus === "complete" ? "pending" : "complete";
+
+  const { mutate, isPending } = taskStatusChange({
+    newStatus,
+    setAlertOpen: setTaskIdForupdate,
+    taskId: taskIdForupdate!,
+    eventId
+  });
+
+  const updateTaskStatus = () => {
+    mutate()
+  }
 
   return (
     <Modal visible={taskModalVisible} animationType="slide">
@@ -78,12 +95,25 @@ const EventTask = ({
                     <Text className="text-SecondaryTextColor text-lg font-normal leading-5 mt-1">
                       {item.description}
                     </Text>
+                    <Text className="text-blue-500 text-lg font-normal leading-5 mt-2">
+                      Due Date: {dayjs(item.due_date).format("DD/MM/YYYY")}
+                    </Text>
 
                     <View className="flex-row gap-5 mt-3">
                       <UserNameBtn userId={item.assigned_to} />
-                      <Text className="text-black capitalize bg-yellow-500 px-2 py-1 text-sm rounded-md">
-                        {item.status}
-                      </Text>
+
+                      <Pressable
+                        onPress={() => {
+                          setTaskIdForupdate(item.id);
+                          setTaskStatus(item.status);
+                        }}
+                        className="bg-yellow-500 px-2 py-1 rounded-md"
+                      >
+                        <Text className="text-black capitalize text-sm">
+                          {item.status}
+                        </Text>
+                      </Pressable>
+
                       <Pressable
                         onPress={() => setDeleteAlertOpen(item.id)}
                         className="bg-red-500 px-2 py-1 rounded-md"
@@ -112,6 +142,14 @@ const EventTask = ({
             deleteAlertOpen={deleteAlertOpen}
             setDeleteAlertOpen={setDeleteAlertOpen}
             eventId={eventId!}
+          />
+        )}
+
+        {taskIdForupdate && (
+          <UpdateAlert 
+            setSelectedToUpdate={setTaskIdForupdate}
+            isPending={isPending}
+            onPress={updateTaskStatus}
           />
         )}
       </View>

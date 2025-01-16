@@ -17,6 +17,7 @@ import TotalGuests from "@/src/components/smallHelping/TotalGuests";
 import {
   singleEventDetails,
   updateEventImage,
+  updateEventPublicState,
 } from "@/src/utils/quries/eventQurery";
 import Entypo from "@expo/vector-icons/Entypo";
 import { useAuth } from "@/src/context/AuthProvider";
@@ -24,7 +25,7 @@ import EventTaskBtn from "@/src/components/smallHelping/EventTaskBtn";
 import { locationName } from "@/src/utils/services/locationName";
 import * as ImagePicker from "expo-image-picker";
 import { MAX_IMAGE_FILE_SIZE } from "@/src/utils/constants/constants";
-import EventPublicStateAlert from "@/src/components/smallHelping/EventPublicStateAlert";
+import UpdateAlert from "@/src/components/smallHelping/UpdateAlert";
 
 const SingleEvent = () => {
   const [selectedEventImage, setSelectedEventImage] = useState<string | null>(
@@ -97,7 +98,14 @@ const SingleEvent = () => {
 
     mutate({ imageUri: selectedEventImage });
   };
+
+  const { mutate: updatePublicStateMutate, isPending: updatePublicStateIsPending } = updateEventPublicState(selectedEventToUpdatePublic!, setSelectedEventToUpdatePublic)
   
+  const handleEventPublicState = () => {
+    const newPublicState = !data?.ispublic;
+    updatePublicStateMutate({ publicState: newPublicState })
+  }
+
   if (isLoading) return <LoadData />;
 
   return (
@@ -250,10 +258,10 @@ const SingleEvent = () => {
       )}
 
       {selectedEventToUpdatePublic && (
-        <EventPublicStateAlert 
-          selectedEventToUpdatePublic={selectedEventToUpdatePublic}
-          setSelectedEventToUpdatePublic={setSelectedEventToUpdatePublic}
-          publicState={data?.ispublic!}
+        <UpdateAlert 
+          setSelectedToUpdate={setSelectedEventToUpdatePublic}
+          isPending={updatePublicStateIsPending}
+          onPress={handleEventPublicState}
         />
       )}
     </View>
