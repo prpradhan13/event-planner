@@ -16,38 +16,40 @@ const AllUserList = ({ modalVisible, setModalVisible, eventId }: AllUserListProp
   const { data, isLoading } = allUsers();
 
   return (
-    <Modal visible={modalVisible} animationType="slide">
-      <View className="flex-1 bg-MainBackgroundColor p-4">
-        <View className="flex-row gap-5 items-center">
-          <Ionicons
-            onPress={() => setModalVisible(false)}
-            name="arrow-back-sharp"
-            size={24}
-            color="#fff"
-          />
-        </View>
+    <Modal visible={modalVisible} animationType="slide" transparent>
+      <View className="flex-1 bg-[#000000bd]">
+        <View className="h-[80%] w-full absolute bottom-0 bg-MainBackgroundColor p-4 rounded-t-3xl">
+          <View className="flex-row gap-5 items-center">
+            <Ionicons
+              onPress={() => setModalVisible(false)}
+              name="arrow-back-sharp"
+              size={24}
+              color="#fff"
+            />
+          </View>
 
-        {isLoading ? (
-          <GuestListLoading />
-        ) : (
-          <FlatList
-            data={data}
-            keyExtractor={(item) => item.id.toString()}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              gap: 10,
-              paddingVertical: 10,
-            }}
-            renderItem={({ item }) => <InviteGuests usersList={item} eventId={eventId} setModalVisible={setModalVisible} />}
-            ListEmptyComponent={() => (
-              <View className="h-[80vh] w-full justify-center items-center">
-                <Text className="text-[#8c8c8c] font-medium text-lg">
-                  No Guesets Invited
-                </Text>
-              </View>
-            )}
-          />
-        )}
+          {isLoading ? (
+            <GuestListLoading />
+          ) : (
+            <FlatList
+              data={data}
+              keyExtractor={(item) => item.id.toString()}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                gap: 10,
+                paddingVertical: 10,
+              }}
+              renderItem={({ item }) => <InviteGuests usersList={item} eventId={eventId} setModalVisible={setModalVisible} />}
+              ListEmptyComponent={() => (
+                <View className="h-[80vh] w-full justify-center items-center">
+                  <Text className="text-[#8c8c8c] font-medium text-lg">
+                    No Guesets Invited
+                  </Text>
+                </View>
+              )}
+            />
+          )}
+        </View>
       </View>
     </Modal>
   );

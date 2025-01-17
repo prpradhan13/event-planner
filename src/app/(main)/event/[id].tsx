@@ -16,6 +16,7 @@ import Mapview, { Marker } from "react-native-maps";
 import TotalGuests from "@/src/components/smallHelping/TotalGuests";
 import {
   singleEventDetails,
+  updateEntryStatus,
   updateEventImage,
   updateEventPublicState,
 } from "@/src/utils/quries/eventQurery";
@@ -30,14 +31,12 @@ import RequestToEnterEvent from "@/src/components/smallHelping/RequestToEnterEve
 import { guestQuery } from "@/src/utils/quries/guestQuery";
 import EventPageBtn from "@/src/components/buttons/EventPageBtn";
 import InvitationRejectAlert from "@/src/components/smallHelping/InvitationRejectAlert";
+import EntryStatusUpdateAlert from "@/src/components/smallHelping/EntryStatusUpdateAlert";
 
 const SingleEvent = () => {
-  const [selectedEventImage, setSelectedEventImage] = useState<string | null>(
-    null
-  );
-  const [selectedEventToUpdatePublic, setSelectedEventToUpdatePublic] =
-    useState<number | null>(null);
-
+  const [selectedEventImage, setSelectedEventImage] = useState<string | null>(null);
+  const [selectedEventToUpdatePublic, setSelectedEventToUpdatePublic] =useState<number | null>(null);
+  const [selectedEventToUpdateEntry, setSelectedEventToUpdateEntry] = useState<number | null>(null);
   const [requestToEnter, setRequestToEnter] = useState(false);
   const [requestReject, setrequestReject] = useState(false);
 
@@ -119,24 +118,41 @@ const SingleEvent = () => {
     updatePublicStateMutate({ publicState: newPublicState });
   };
 
-  const { data: guestsList } = guestQuery(data?.id)
-  const userInGuestList = guestsList?.find((guest) => guest.guest_id === user?.id)
-  
+  const { data: guestsList } = guestQuery(data?.id);
+  const userInGuestList = guestsList?.find(
+    (guest) => guest.guest_id === user?.id
+  );
+
   if (isLoading) return <LoadData />;
 
   const renderPublicBtn = () => {
-    if (userInGuestList?.status === "invited") return <EventPageBtn onPress={handleRenderedBtnPress} btnName="invited"/>;
-    if (userInGuestList?.status === "accepted") return <EventPageBtn onPress={handleRenderedBtnPress} btnName="request accepted"/>;
-    if (userInGuestList?.status === "request") return <EventPageBtn onPress={handleRejectInvitation} btnName="request send"/>;
-    if (!userInGuestList) return <EventPageBtn onPress={handleRenderedBtnPress} btnName="request"/>;
-  }
+    if (userInGuestList?.status === "invited")
+      return (
+        <EventPageBtn onPress={handleRenderedBtnPress} btnName="invited" />
+      );
+    if (userInGuestList?.status === "accepted")
+      return (
+        <EventPageBtn
+          onPress={handleRenderedBtnPress}
+          btnName="request accepted"
+        />
+      );
+    if (userInGuestList?.status === "request")
+      return (
+        <EventPageBtn onPress={handleRejectInvitation} btnName="request send" />
+      );
+    if (!userInGuestList)
+      return (
+        <EventPageBtn onPress={handleRenderedBtnPress} btnName="request" />
+      );
+  };
 
   const handleRenderedBtnPress = () => {
-    setRequestToEnter(true)
-  }
+    setRequestToEnter(true);
+  };
 
   const handleRejectInvitation = () => {
-    setrequestReject(true)
+    setrequestReject(true);
   };
 
   return (
@@ -225,7 +241,20 @@ const SingleEvent = () => {
 
           {data?.user_id === user?.id && <EventTaskBtn eventId={data?.id} />}
 
-          {data?.ispublic && renderPublicBtn()}
+          {data?.user_id != user?.id ? (
+            <>{data?.ispublic && renderPublicBtn()}</>
+          ) : (
+            <Pressable
+              onPress={() => setSelectedEventToUpdateEntry(data?.id!)}
+              className={`py-1 px-3 rounded-md ${
+                data?.entry_status ? "bg-red-500" : "bg-green-500"
+              }`}
+            >
+              <Text className="text-[#000] font-medium text-base capitalize">
+                {data?.entry_status ? "Close Entry" : "Open Entry"}
+              </Text>
+            </Pressable>
+          )}
         </View>
 
         <View className="rounded-xl mt-5">
@@ -302,6 +331,15 @@ const SingleEvent = () => {
         />
       )}
 
+      {/* Close Or Open Event's entry */}
+      {selectedEventToUpdateEntry && (
+        <EntryStatusUpdateAlert
+          selectedEventId={selectedEventToUpdateEntry}
+          setSelectedEventToUpdateEntry={setSelectedEventToUpdateEntry}
+          entryStatus={data?.entry_status!}
+        />
+      )}
+
       {requestToEnter && (
         <RequestToEnterEvent
           setRequestToEnter={setRequestToEnter}
@@ -313,7 +351,7 @@ const SingleEvent = () => {
       {userInGuestList?.guest_id === user?.id && (
         <>
           {requestReject && (
-            <InvitationRejectAlert 
+            <InvitationRejectAlert
               setInvitationReject={setrequestReject}
               invitationId={userInGuestList?.id!}
             />

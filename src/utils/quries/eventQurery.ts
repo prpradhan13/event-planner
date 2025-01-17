@@ -48,7 +48,10 @@ export const allPublicEvents = () => {
   return useQuery<EventsType[]>({
     queryKey: ["all_events"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("events").select("*").eq("ispublic", true);
+      const { data, error } = await supabase
+        .from("events")
+        .select("*")
+        .eq("ispublic", true);
 
       if (error) {
         throw new Error(error.message);
@@ -239,6 +242,35 @@ export const updateEventPublicState = (
       queryClient.invalidateQueries({ queryKey: [`eventDetails_${eventId}`] });
       setSelectedEventToUpdatePublic(null);
       alert("Successfully update event");
+    },
+  });
+};
+
+export const updateEntryStatus = (
+  eventId: number,
+  setSelectedEventToUpdateEntry: Dispatch<SetStateAction<number | null>>
+) => {
+  const { user } = useAuth();
+  const userId = user?.id;
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ newEntryStatus }: {newEntryStatus: boolean}) => {
+      const { error } = await supabase
+        .from("events")
+        .update({ entry_status: newEntryStatus })
+        .eq("id", eventId);
+
+      if (error) {
+        alert("Error" + error.message);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`events_${userId}`] });
+      queryClient.invalidateQueries({ queryKey: [`all_events`] });
+      queryClient.invalidateQueries({ queryKey: [`eventDetails_${eventId}`] });
+      setSelectedEventToUpdateEntry(null);
+      alert("Successfully update event entry status");
     },
   });
 };

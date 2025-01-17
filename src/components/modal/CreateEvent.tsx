@@ -1,6 +1,7 @@
 import {
   ActivityIndicator,
   Image,
+  KeyboardAvoidingView,
   Modal,
   Text,
   TextInput,

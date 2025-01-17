@@ -8,7 +8,7 @@ export type EventsType = {
     user_id: string;
     latitude?: string;
     longitude?: string;
-    status: string;
+    entry_status: boolean;
     ispublic: boolean;
 }
 

@@ -17,7 +17,7 @@ const EventPageBtn = ({
         : btnName === "request send" ? "bg-green-500"
         : btnName === "request accepted" ? "bg-green-500"
         : btnName === "invited" ? "bg-blue-500"
-        : ""
+        : "bg-[#ebebeb]"
       }`}
     >
       <Text className="text-[#000] font-medium text-base capitalize">

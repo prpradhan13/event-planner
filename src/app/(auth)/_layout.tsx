@@ -7,7 +7,7 @@ const AuthLayout = () => {
     const { isAuthenticated } = useAuth();
 
     if (isAuthenticated) {
-        return <Redirect href="/(main)/(tabs)" />
+      return <Redirect href="/(main)/(tabs)" />
     }
 
   return <Stack screenOptions={{ headerShown: false }} />;
