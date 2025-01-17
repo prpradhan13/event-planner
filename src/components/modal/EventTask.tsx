@@ -1,5 +1,5 @@
-import { FlatList, Modal, Pressable, Text, View } from "react-native";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import { BackHandler, FlatList, Modal, Pressable, Text, View } from "react-native";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { tasksForEvent, taskStatusChange } from "@/src/utils/quries/taskQuery";
 import LoadData from "../smallHelping/LoadData";
@@ -43,7 +43,7 @@ const EventTask = ({
   return (
     <Modal visible={taskModalVisible} animationType="slide" transparent={true}>
       <View className="flex-1 bg-[#000000bd]">
-        <View className="h-[85%] absolute bottom-0 bg-MainBackgroundColor p-4 rounded-t-3xl">
+        <View className="w-full h-[85%] absolute bottom-0 bg-MainBackgroundColor p-4 rounded-t-3xl">
           <View className="flex-row items-center justify-between">
             <View className="flex-row gap-5 items-center">
               <Ionicons

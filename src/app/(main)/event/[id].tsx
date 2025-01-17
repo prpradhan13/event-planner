@@ -32,6 +32,7 @@ import { guestQuery } from "@/src/utils/quries/guestQuery";
 import EventPageBtn from "@/src/components/buttons/EventPageBtn";
 import InvitationRejectAlert from "@/src/components/smallHelping/InvitationRejectAlert";
 import EntryStatusUpdateAlert from "@/src/components/smallHelping/EntryStatusUpdateAlert";
+import { getUserDetatils } from "@/src/utils/quries/userQuery";
 
 const SingleEvent = () => {
   const [selectedEventImage, setSelectedEventImage] = useState<string | null>(null);
@@ -46,6 +47,8 @@ const SingleEvent = () => {
 
   if (!singleId) return null;
   const { data, isLoading } = singleEventDetails(singleId);
+  const { data: eventCreaterData } = getUserDetatils(data?.user_id!);
+
   const [placeName, setPlaceName] = useState<string | null>(null);
 
   const eventInitialLetter = useMemo(
@@ -196,7 +199,7 @@ const SingleEvent = () => {
         </View>
 
         <View className="mt-5">
-          {data?.user_id === user?.id && (
+          {eventCreaterData?.id === user?.id && (
             <Pressable
               onPress={() => setSelectedEventToUpdatePublic(data?.id!)}
               className="border border-BorderColor rounded-md w-36 py-1"
@@ -207,25 +210,17 @@ const SingleEvent = () => {
             </Pressable>
           )}
 
-          <View className="flex-row items-start gap-3 mt-3">
-            <Entypo name="calendar" size={18} color="#c8c8c8" />
-            <View className="flex-row gap-2 items-center">
-              {data?.event_time && (
-                <Text className="text-SecondaryTextColor font-medium text-base leading-5">
-                  {dayjs(`1970-01-01T${data?.event_time}`).format("hh:mm A")}
-                </Text>
-              )}
-              <Text className="text-SecondaryTextColor font-medium text-base leading-5">
-                {dayjs(data?.date).format("dddd, D MMM YYYY")}
-              </Text>
-            </View>
-          </View>
-
-          <View className="flex-row items-center gap-3 mt-2">
-            <Entypo name="location-pin" size={18} color="#ef4444" />
-            <Text className="text-SecondaryTextColor font-medium text-base leading-5">
-              {placeName}
-            </Text>
+          <View className="flex-row gap-3 items-center mt-2">
+            <Image 
+              source={{ uri: eventCreaterData?.avatar_url! }}
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 100
+              }}
+              resizeMode="cover"
+            />
+            <Text className="text-white font-medium text-lg">{eventCreaterData?.full_name}</Text>
           </View>
 
           <Text className="text-PrimaryTextColor text-2xl font-semibold mt-3 capitalize">
@@ -234,6 +229,27 @@ const SingleEvent = () => {
           <Text className="text-SecondaryTextColor text-base leading-5">
             {data?.description}
           </Text>
+
+          <View className="flex-row items-start gap-3 mt-3">
+            <Entypo name="calendar" size={18} color="#3b82f6" />
+            <View className="flex-row gap-2 items-center">
+              {data?.event_time && (
+                <Text className="text-PrimaryTextColor font-medium text-base leading-5">
+                  {dayjs(`1970-01-01T${data?.event_time}`).format("hh:mm A")}
+                </Text>
+              )}
+              <Text className="text-PrimaryTextColor font-medium text-base leading-5">
+                {dayjs(data?.date).format("dddd, D MMM YYYY")}
+              </Text>
+            </View>
+          </View>
+
+          <View className="flex-row items-center gap-3 mt-2">
+            <Entypo name="location-pin" size={18} color="#ef4444" />
+            <Text className="text-PrimaryTextColor font-medium text-base leading-5">
+              {placeName}
+            </Text>
+          </View>
         </View>
 
         <View className="flex-row gap-3 mt-4">
