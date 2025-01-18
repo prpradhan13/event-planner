@@ -7,12 +7,14 @@ interface RequestToEnterEventProps {
   setRequestToEnter: Dispatch<SetStateAction<boolean>>;
   eventCreaterId: string;
   eventId: number;
+  price?: number;
 }
 
 const RequestToEnterEvent = ({
   setRequestToEnter,
   eventCreaterId,
   eventId,
+  price
 }: RequestToEnterEventProps) => {
   const { user } = useAuth();
   const userId = user?.id;
@@ -30,6 +32,10 @@ const RequestToEnterEvent = ({
     mutate({ guestStatus: "request" })
   };
 
+  const handlePressOnPay = () => {
+    console.log("Paid");
+  }
+
   return (
     <View className="absolute h-screen w-[100vw] top-0 right-0 bg-[#000000a7] px-4 justify-center">
       <View className="bg-[#4a4a4a] p-5 h-40 rounded-md justify-center items-center">
@@ -43,19 +49,30 @@ const RequestToEnterEvent = ({
           >
             <Text className="text-[#000] font-medium text-center">No</Text>
           </Pressable>
-          <Pressable
-            onPress={handlePressOnYes}
-            disabled={isPending}
-            className="bg-[#fff] w-24 py-2 rounded-md"
-          >
-            {isPending ? (
-              <ActivityIndicator />
-            ) : (
-              <Text className="text-[#000] font-medium text-center">
-                Yes
-              </Text>
-            )}
-          </Pressable>
+
+          {price && price > 0 ? (
+           <Pressable
+            onPress={handlePressOnPay}
+            className="bg-[#fff] px-4 py-2 rounded-md"
+           >
+            <Text className="text-[#000] font-medium text-center">Pay {price}</Text>
+           </Pressable> 
+          ) : (
+            <Pressable
+              onPress={handlePressOnYes}
+              disabled={isPending}
+              className="bg-[#fff] w-24 py-2 rounded-md"
+            >
+              {isPending ? (
+                <ActivityIndicator />
+              ) : (
+                <Text className="text-[#000] font-medium text-center">
+                  Yes
+                </Text>
+              )}
+            </Pressable>
+          )}
+
         </View>
       </View>
     </View>

@@ -255,7 +255,7 @@ export const updateEntryStatus = (
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ newEntryStatus }: {newEntryStatus: boolean}) => {
+    mutationFn: async ({ newEntryStatus }: { newEntryStatus: boolean }) => {
       const { error } = await supabase
         .from("events")
         .update({ entry_status: newEntryStatus })
@@ -271,6 +271,35 @@ export const updateEntryStatus = (
       queryClient.invalidateQueries({ queryKey: [`eventDetails_${eventId}`] });
       setSelectedEventToUpdateEntry(null);
       alert("Successfully update event entry status");
+    },
+  });
+};
+
+export const updateEventPrice = (
+  eventId: number,
+  setModalVisible: Dispatch<SetStateAction<boolean>>
+) => {
+  const { user } = useAuth();
+  const userId = user?.id;
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ newPrice }: { newPrice: number }) => {
+      const { error } = await supabase
+        .from("events")
+        .update({ price: newPrice })
+        .eq("id", eventId);
+
+      if (error) {
+        alert("Error" + error.message);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`events_${userId}`] });
+      queryClient.invalidateQueries({ queryKey: [`all_events`] });
+      queryClient.invalidateQueries({ queryKey: [`eventDetails_${eventId}`] });
+      setModalVisible(false);
+      alert("Successfully set event price");
     },
   });
 };

@@ -31,15 +31,18 @@ import RequestToEnterEvent from "@/src/components/smallHelping/RequestToEnterEve
 import { guestQuery } from "@/src/utils/quries/guestQuery";
 import EventPageBtn from "@/src/components/buttons/EventPageBtn";
 import InvitationRejectAlert from "@/src/components/smallHelping/InvitationRejectAlert";
-import EntryStatusUpdateAlert from "@/src/components/smallHelping/EntryStatusUpdateAlert";
 import { getUserDetatils } from "@/src/utils/quries/userQuery";
+import EntryModal from "@/src/components/modal/EntryModal";
 
 const SingleEvent = () => {
-  const [selectedEventImage, setSelectedEventImage] = useState<string | null>(null);
-  const [selectedEventToUpdatePublic, setSelectedEventToUpdatePublic] =useState<number | null>(null);
-  const [selectedEventToUpdateEntry, setSelectedEventToUpdateEntry] = useState<number | null>(null);
+  const [selectedEventImage, setSelectedEventImage] = useState<string | null>(
+    null
+  );
+  const [selectedEventToUpdatePublic, setSelectedEventToUpdatePublic] =
+    useState<number | null>(null);
   const [requestToEnter, setRequestToEnter] = useState(false);
   const [requestReject, setrequestReject] = useState(false);
+  const [entryModalOpen, setEntryModalOpen] = useState(false);
 
   const { user } = useAuth();
   const { id } = useLocalSearchParams();
@@ -136,7 +139,6 @@ const SingleEvent = () => {
     if (userInGuestList?.status === "accepted")
       return (
         <EventPageBtn
-          onPress={handleRenderedBtnPress}
           btnName="request accepted"
         />
       );
@@ -144,9 +146,19 @@ const SingleEvent = () => {
       return (
         <EventPageBtn onPress={handleRejectInvitation} btnName="request send" />
       );
+    if (userInGuestList?.status === "declined")
+      return (
+        <EventPageBtn
+          onPress={handleRejectInvitation}
+          btnName="request reject"
+        />
+      );
     if (!userInGuestList)
       return (
-        <EventPageBtn onPress={handleRenderedBtnPress} btnName="request" />
+        <EventPageBtn 
+          onPress={handleRenderedBtnPress} 
+          btnName={`${data?.price && data?.price > 0 ? `entry fee: ${data?.price}` : "Entry Free"}`} 
+        />
       );
   };
 
@@ -211,16 +223,18 @@ const SingleEvent = () => {
           )}
 
           <View className="flex-row gap-3 items-center mt-2">
-            <Image 
+            <Image
               source={{ uri: eventCreaterData?.avatar_url! }}
               style={{
                 width: 40,
                 height: 40,
-                borderRadius: 100
+                borderRadius: 100,
               }}
               resizeMode="cover"
             />
-            <Text className="text-white font-medium text-lg">{eventCreaterData?.full_name}</Text>
+            <Text className="text-white font-medium text-lg">
+              {eventCreaterData?.full_name}
+            </Text>
           </View>
 
           <Text className="text-PrimaryTextColor text-2xl font-semibold mt-3 capitalize">
@@ -257,19 +271,18 @@ const SingleEvent = () => {
 
           {data?.user_id === user?.id && <EventTaskBtn eventId={data?.id} />}
 
-          {data?.user_id != user?.id ? (
-            <>{data?.ispublic && renderPublicBtn()}</>
-          ) : (
+          {data?.user_id === user?.id ? (
             <Pressable
-              onPress={() => setSelectedEventToUpdateEntry(data?.id!)}
-              className={`py-1 px-3 rounded-md ${
-                data?.entry_status ? "bg-red-500" : "bg-green-500"
-              }`}
+              onPress={() => setEntryModalOpen(true)}
+              className="py-1 px-3 rounded-md bg-[#ebebeb]"
             >
               <Text className="text-[#000] font-medium text-base capitalize">
-                {data?.entry_status ? "Close Entry" : "Open Entry"}
+                Entries
               </Text>
+              
             </Pressable>
+          ) : (
+            <>{data?.ispublic && renderPublicBtn()}</>
           )}
         </View>
 
@@ -347,20 +360,12 @@ const SingleEvent = () => {
         />
       )}
 
-      {/* Close Or Open Event's entry */}
-      {selectedEventToUpdateEntry && (
-        <EntryStatusUpdateAlert
-          selectedEventId={selectedEventToUpdateEntry}
-          setSelectedEventToUpdateEntry={setSelectedEventToUpdateEntry}
-          entryStatus={data?.entry_status!}
-        />
-      )}
-
       {requestToEnter && (
         <RequestToEnterEvent
           setRequestToEnter={setRequestToEnter}
           eventCreaterId={data?.user_id!}
           eventId={data?.id!}
+          price={data?.price}
         />
       )}
 
@@ -373,6 +378,17 @@ const SingleEvent = () => {
             />
           )}
         </>
+      )}
+
+      {entryModalOpen && (
+        <EntryModal
+          modalVisible={entryModalOpen}
+          setModalVisible={setEntryModalOpen}
+          entryStatus={data?.entry_status!}
+          eventId={data?.id!}
+          eventPrice={data?.price!}
+          isPaid={data?.is_paid!}
+        />
       )}
     </View>
   );

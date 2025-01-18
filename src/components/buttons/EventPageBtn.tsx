@@ -5,7 +5,7 @@ const EventPageBtn = ({
   onPress,
   btnName,
 }: {
-  onPress: () => void;
+  onPress?: () => void;
   btnName: string;
 }) => {
   return (
@@ -13,10 +13,10 @@ const EventPageBtn = ({
       onPress={onPress}
       disabled={btnName === "request accepted"}
       className={`py-1 px-3 rounded-md ${
-        btnName === "request" ? "bg-[#ebebeb]" 
-        : btnName === "request send" ? "bg-green-500"
+        btnName === "request send" ? "bg-yellow-500"
         : btnName === "request accepted" ? "bg-green-500"
         : btnName === "invited" ? "bg-blue-500"
+        : btnName === "request reject" ? "bg-red-500"
         : "bg-[#ebebeb]"
       }`}
     >

@@ -8,8 +8,10 @@ export type EventsType = {
     user_id: string;
     latitude?: string;
     longitude?: string;
-    entry_status: boolean;
     ispublic: boolean;
+    entry_status: boolean;
+    price: number;
+    is_paid: boolean;
 }
 
 export type EventCardProps = {

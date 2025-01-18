@@ -58,7 +58,7 @@ export const inviteStatusChange = () => {
       queryClient.invalidateQueries({
         queryKey: ["guests"],
       });
-      alert("Invite Accepted");
+      alert("Success");
     },
   });
 };

@@ -11,6 +11,7 @@ import Entypo from "@expo/vector-icons/Entypo";
 import AllUserList from "./AllUserList";
 import { useAuth } from "@/src/context/AuthProvider";
 import InvitedGuests from "../flatLists/InvitedGuests";
+import { GuestsType } from "@/src/types/eventType";
 
 interface GuestListProps {
   modalVisible: boolean;
@@ -79,8 +80,8 @@ const GuestList = ({
             />
             <View className="flex-row items-end gap-3">
               <Text className="text-white text-3xl font-bold">Member</Text>
-              <Text className="text-base text-white font-medium leading-7">
-                {inviteAcceptMembers?.length}/{data?.length}
+              <Text className="text-sm text-white font-medium leading-7">
+                {inviteAcceptMembers  && inviteAcceptMembers?.length > 0 ? inviteAcceptMembers?.length : "N/A"}
               </Text>
             </View>
           </View>
@@ -111,7 +112,7 @@ const GuestList = ({
                     : "text-blue-500"
                 }`}
               >
-                Invite Accepte
+                Invite Accept
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -144,7 +145,7 @@ const GuestList = ({
                     : "text-blue-500"
                 }`}
               >
-                Requests
+                Requests ({requestsMembers?.length})
               </Text>
             </TouchableOpacity>
           </View>
