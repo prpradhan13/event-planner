@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../supabase";
 import { GuestsType } from "@/src/types/eventType";
 import { useAuth } from "@/src/context/AuthProvider";
+import { sendRequestForEntryNotification } from "../notification";
 
 export const inviteQuery = () => {
   const { user } = useAuth();
@@ -42,16 +43,19 @@ export const inviteStatusChange = () => {
       inviteId: number;
       newStatus: string;
     }) => {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("event_guests")
         .update({ status: newStatus })
-        .eq("id", inviteId);
+        .eq("id", inviteId)
+        .select();
 
       if (error) {
         alert("Error: " + error.message);
       }
+      
+      return data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: [`invites_${userId}`],
       });
@@ -59,6 +63,10 @@ export const inviteStatusChange = () => {
         queryKey: ["guests"],
       });
       alert("Success");
+      // sendRequestForEntryNotification(data[0])
+    },
+    onError: (error) => {
+      alert(`Error: ${error.message}`);
     },
   });
 };

@@ -3,6 +3,7 @@ import { supabase } from "../supabase";
 import { GuestDetailsType, GuestsType } from "@/src/types/eventType";
 import { Dispatch, SetStateAction } from "react";
 import { Alert } from "react-native";
+import { sendRequestForEntryNotification } from "../notification";
 
 export const guestQuery = (eventId?: number) => {
   return useQuery<GuestsType[]>({
@@ -64,23 +65,29 @@ export const addGuest = (
         throw new Error("Event ID is required.");
       }
 
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("event_guests")
-        .insert({ guest_id: userId, event_id: eventId, status: guestStatus });
+        .insert({ guest_id: userId, event_id: eventId, status: guestStatus })
+        .select()
 
         if (error) {
-            console.error(error.message);
-            alert("Failed to add in guest list. Please try again.");
-            throw new Error(error.message);
-          }
-          
+          alert("Failed to add in guest list. Please try again.")
+          throw error.message;
+        }
+
+      return data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: ["guests"],
       });
 
       setModalVisible(false);
+      sendRequestForEntryNotification(data[0]);
+    },
+    onError: (error) => {
+      console.error("Mutation error:", error);
+      alert(`Error: ${error.message}`);
     },
   });
 };

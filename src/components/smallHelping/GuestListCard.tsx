@@ -11,6 +11,7 @@ import { getUserDetatils } from "@/src/utils/quries/userQuery";
 import { useAuth } from "@/src/context/AuthProvider";
 import { inviteStatusChange } from "@/src/utils/quries/invitesQurey";
 import RemoveGuest from "./RemoveGuest";
+import { sendRequestForEntryNotification } from "@/src/utils/notification";
 
 interface GuestListCardProps {
   guestId: string;

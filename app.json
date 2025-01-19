@@ -41,7 +41,11 @@
     "extra": {
       "router": {
         "origin": false
+      },
+      "eas": {
+        "projectId": "5e830cb4-39a6-42ad-becc-2fe3eff5c569"
       }
-    }
+    },
+    "owner": "prp07"
   }
 }

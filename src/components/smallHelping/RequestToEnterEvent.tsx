@@ -2,6 +2,7 @@ import { ActivityIndicator, Alert, Pressable, Text, View } from "react-native";
 import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { useAuth } from "@/src/context/AuthProvider";
 import { addGuest } from "@/src/utils/quries/guestQuery";
+import { sendRequestForEntryNotification } from "@/src/utils/notification";
 
 interface RequestToEnterEventProps {
   setRequestToEnter: Dispatch<SetStateAction<boolean>>;
