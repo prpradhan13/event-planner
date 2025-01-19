@@ -275,7 +275,7 @@ const SingleEvent = () => {
               </Text>
             </Pressable>
           ) : (
-            <>{data?.ispublic && renderPublicBtn()}</>
+            <>{data?.entry_status && renderPublicBtn()}</>
           )}
         </View>
 
