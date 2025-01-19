@@ -1,13 +1,13 @@
-import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { useAuth } from "@/src/context/AuthProvider";
 import { Redirect, Stack } from "expo-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "react-native-get-random-values";
+import { StripeProvider } from '@stripe/stripe-react-native';
 
 const queryClient = new QueryClient();
 
-const MainLayout = () => {
+const Layout = () => {
   const { isAuthenticated } = useAuth();
 
   if (!isAuthenticated) {
@@ -35,5 +35,15 @@ const MainLayout = () => {
     </QueryClientProvider>
   );
 };
+
+const MainLayout = () => {
+  const publishableKey = process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+
+  return (
+    <StripeProvider publishableKey={publishableKey!}>
+      <Layout />
+    </StripeProvider>
+  )
+}
 
 export default MainLayout;

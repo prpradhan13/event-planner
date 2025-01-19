@@ -34,7 +34,7 @@ const EntryStatusUpdateAlert = ({
     <View className="absolute h-screen w-[100vw] top-0 right-0 bg-[#000000a7] px-4 justify-center">
       <View className="bg-[#4a4a4a] p-5 h-40 rounded-md justify-center items-center">
         <Text className="text-[#fff] font-medium text-xl">
-          Are you sure to update?
+          Are you sure to {entryStatus ? "Close Entries" : "Open Entries"}?
         </Text>
         <View className="flex-row gap-5 mt-5">
           <Pressable

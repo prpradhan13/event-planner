@@ -16,7 +16,6 @@ import Mapview, { Marker } from "react-native-maps";
 import TotalGuests from "@/src/components/smallHelping/TotalGuests";
 import {
   singleEventDetails,
-  updateEntryStatus,
   updateEventImage,
   updateEventPublicState,
 } from "@/src/utils/quries/eventQurery";
@@ -32,17 +31,14 @@ import { guestQuery } from "@/src/utils/quries/guestQuery";
 import EventPageBtn from "@/src/components/buttons/EventPageBtn";
 import InvitationRejectAlert from "@/src/components/smallHelping/InvitationRejectAlert";
 import { getUserDetatils } from "@/src/utils/quries/userQuery";
-import EntryModal from "@/src/components/modal/EntryModal";
+import EntryStatusUpdateAlert from "@/src/components/smallHelping/EntryStatusUpdateAlert";
 
 const SingleEvent = () => {
-  const [selectedEventImage, setSelectedEventImage] = useState<string | null>(
-    null
-  );
-  const [selectedEventToUpdatePublic, setSelectedEventToUpdatePublic] =
-    useState<number | null>(null);
+  const [selectedEventImage, setSelectedEventImage] = useState<string | null>(null);
+  const [selectedEventToUpdatePublic, setSelectedEventToUpdatePublic] = useState<number | null>(null);
+  const [selectedEventToUpdateEntry, setSelectedEventToUpdateEntry] = useState<number | null>(null);
   const [requestToEnter, setRequestToEnter] = useState(false);
   const [requestReject, setrequestReject] = useState(false);
-  const [entryModalOpen, setEntryModalOpen] = useState(false);
 
   const { user } = useAuth();
   const { id } = useLocalSearchParams();
@@ -137,11 +133,7 @@ const SingleEvent = () => {
         <EventPageBtn onPress={handleRenderedBtnPress} btnName="invited" />
       );
     if (userInGuestList?.status === "accepted")
-      return (
-        <EventPageBtn
-          btnName="request accepted"
-        />
-      );
+      return <EventPageBtn btnName="request accepted" />;
     if (userInGuestList?.status === "request")
       return (
         <EventPageBtn onPress={handleRejectInvitation} btnName="request send" />
@@ -155,10 +147,10 @@ const SingleEvent = () => {
       );
     if (!userInGuestList)
       return (
-        <EventPageBtn 
-          onPress={handleRenderedBtnPress} 
-          btnName={`${data?.price && data?.price > 0 ? `entry fee: ${data?.price}` : "Entry Free"}`} 
-        />
+        <EventPageBtn
+          onPress={handleRenderedBtnPress}
+          btnName="request for entry"
+          />
       );
   };
 
@@ -273,13 +265,14 @@ const SingleEvent = () => {
 
           {data?.user_id === user?.id ? (
             <Pressable
-              onPress={() => setEntryModalOpen(true)}
-              className="py-1 px-3 rounded-md bg-[#ebebeb]"
+              onPress={() => setSelectedEventToUpdateEntry(data?.id!)}
+              className={`py-1 px-3 rounded-md  ${
+                data?.entry_status ? "bg-green-500" : "bg-red-500"
+              }`}
             >
-              <Text className="text-[#000] font-medium text-base capitalize">
-                Entries
+              <Text className="text-[#000] font-medium capitalize">
+                {data?.entry_status ? "Entries Open" : "Entries Closed"}
               </Text>
-              
             </Pressable>
           ) : (
             <>{data?.ispublic && renderPublicBtn()}</>
@@ -365,7 +358,14 @@ const SingleEvent = () => {
           setRequestToEnter={setRequestToEnter}
           eventCreaterId={data?.user_id!}
           eventId={data?.id!}
-          price={data?.price}
+        />
+      )}
+
+      {selectedEventToUpdateEntry && (
+        <EntryStatusUpdateAlert 
+          selectedEventId={selectedEventToUpdateEntry}
+          setSelectedEventToUpdateEntry={setSelectedEventToUpdateEntry}
+          entryStatus={data?.entry_status!}
         />
       )}
 
@@ -378,17 +378,6 @@ const SingleEvent = () => {
             />
           )}
         </>
-      )}
-
-      {entryModalOpen && (
-        <EntryModal
-          modalVisible={entryModalOpen}
-          setModalVisible={setEntryModalOpen}
-          entryStatus={data?.entry_status!}
-          eventId={data?.id!}
-          eventPrice={data?.price!}
-          isPaid={data?.is_paid!}
-        />
       )}
     </View>
   );

@@ -13,7 +13,7 @@ const UpdateAlert = ({ setSelectedToUpdate, isPending, onPress, btnName="Update"
     <View className="absolute h-screen w-[100vw] top-0 right-0 bg-[#000000a7] px-4 justify-center">
       <View className="bg-[#4a4a4a] p-5 h-40 rounded-md justify-center items-center">
         <Text className="text-[#fff] font-medium text-xl">
-          Are you sure to Update?
+          Are you sure to {btnName}?
         </Text>
         <View className="flex-row gap-5 mt-5">
           <Pressable
@@ -25,7 +25,7 @@ const UpdateAlert = ({ setSelectedToUpdate, isPending, onPress, btnName="Update"
           <Pressable
             onPress={onPress}
             disabled={isPending}
-            className="bg-[#fff] w-24 py-2 rounded-md"
+            className="bg-[#fff] w-28 py-2 rounded-md"
           >
             {isPending ? (
               <ActivityIndicator />
