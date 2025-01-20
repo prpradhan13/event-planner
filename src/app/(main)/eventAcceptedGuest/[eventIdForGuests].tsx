@@ -119,7 +119,7 @@ const eventAcceptedGuest = () => {
           onPress={handleScanButtonPress}
           className="bg-SecondaryTextColor p-2 rounded-md self-start my-2"
         >
-          <MaterialCommunityIcons name="line-scan" size={24} color="black" />
+          <AntDesign name="scan1" size={28} color="black" />
         </Pressable>
       )}
 

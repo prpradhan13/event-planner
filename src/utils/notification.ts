@@ -20,7 +20,7 @@ export async function sendRequestForEntryNotification(guestInfo: GuestsType) {
     to: pushToken,
     sound: "default",
     title: "Entry Request!",
-    body: `${data?.profiles?.username} make a reequest you to join this event.`,
+    body: `${data?.profiles?.username} make a request you to join ${data?.events?.name}.`,
     data: { eventId: data?.events?.id },
   };
   sendPushNotification(message);

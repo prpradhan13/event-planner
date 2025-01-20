@@ -35,7 +35,7 @@ export default function NotificationProvider({
       Notifications.addNotificationReceivedListener((notification) => {
         Alert.alert(
           notification.request.content.title || "Notification Title",
-          notification.request.content.subtitle || "Notification Subtitle"
+          notification.request.content.body || "Notification Subtitle"
         );
       });
 
@@ -112,7 +112,7 @@ async function registerForPushNotificationsAsync() {
           projectId,
         })
       ).data;
-      
+
       // console.log(pushTokenString);
       return pushTokenString;
 
