@@ -3,6 +3,7 @@ import { supabase } from "../supabase";
 import { GuestsType } from "@/src/types/eventType";
 import { useAuth } from "@/src/context/AuthProvider";
 import { sendRequestForEntryNotification } from "../notification";
+import { v4 as uuidv4 } from "uuid";
 
 export const inviteQuery = () => {
   const { user } = useAuth();
@@ -43,17 +44,38 @@ export const inviteStatusChange = () => {
       inviteId: number;
       newStatus: string;
     }) => {
-      const { data, error } = await supabase
+      if (newStatus === "accepted") {
+        const uniqueId = uuidv4();
+        console.log(uniqueId);
+        const { data, error } = await supabase
         .from("event_guests")
-        .update({ status: newStatus })
+        .update({ 
+          status: "accepted",
+          entry_pass_code: uniqueId, 
+        })
         .eq("id", inviteId)
         .select();
 
-      if (error) {
-        alert("Error: " + error.message);
+        if (error) {
+          alert("Error: " + error.message);
+        }
+        
+        return data;
+      } else {
+        console.log("inside others");
+        
+        const { data, error } = await supabase
+          .from("event_guests")
+          .update({ status: newStatus })
+          .eq("id", inviteId)
+          .select();
+  
+        if (error) {
+          alert("Error: " + error.message);
+        }
+        
+        return data;
       }
-      
-      return data;
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({
@@ -63,7 +85,6 @@ export const inviteStatusChange = () => {
         queryKey: ["guests"],
       });
       alert("Success");
-      // sendRequestForEntryNotification(data[0])
     },
     onError: (error) => {
       alert(`Error: ${error.message}`);

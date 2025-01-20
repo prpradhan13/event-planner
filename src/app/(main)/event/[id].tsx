@@ -32,6 +32,7 @@ import EventPageBtn from "@/src/components/buttons/EventPageBtn";
 import InvitationRejectAlert from "@/src/components/smallHelping/InvitationRejectAlert";
 import { getUserDetatils } from "@/src/utils/quries/userQuery";
 import EntryStatusUpdateAlert from "@/src/components/smallHelping/EntryStatusUpdateAlert";
+import EntryPassCodeBtn from "@/src/components/smallHelping/EntryPassCodeBtn";
 
 const SingleEvent = () => {
   const [selectedEventImage, setSelectedEventImage] = useState<string | null>(null);
@@ -276,6 +277,12 @@ const SingleEvent = () => {
             </Pressable>
           ) : (
             <>{data?.entry_status && renderPublicBtn()}</>
+          )}
+
+          {userInGuestList?.entry_pass_code && (
+            <EntryPassCodeBtn 
+              passCode={userInGuestList?.entry_pass_code}
+            />
           )}
         </View>
 

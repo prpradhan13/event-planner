@@ -37,6 +37,7 @@ export type GuestsType = {
     event_id: number;
     guest_id: string;
     status: string;
+    entry_pass_code: string | null;
 }
 
 export type GuestDetailsType = {
