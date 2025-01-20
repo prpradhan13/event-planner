@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 export const inviteQuery = () => {
   const { user } = useAuth();
   const userId = user?.id;
-  
+
   return useQuery<GuestsType[]>({
     queryKey: userId ? [`invites_${userId}`] : ["invites"],
     queryFn: async () => {
@@ -46,34 +46,47 @@ export const inviteStatusChange = () => {
     }) => {
       if (newStatus === "accepted") {
         const uniqueId = uuidv4();
-        console.log(uniqueId);
+
         const { data, error } = await supabase
-        .from("event_guests")
-        .update({ 
-          status: "accepted",
-          entry_pass_code: uniqueId, 
-        })
-        .eq("id", inviteId)
-        .select();
+          .from("event_guests")
+          .update({
+            status: "accepted",
+            entry_pass_code: uniqueId,
+          })
+          .eq("id", inviteId)
+          .select();
 
         if (error) {
           alert("Error: " + error.message);
         }
-        
+
+        return data;
+      } else if (newStatus === "declined") {
+        const { data, error } = await supabase
+          .from("event_guests")
+          .update({
+            status: "declined",
+            entry_pass_code: null,
+          })
+          .eq("id", inviteId)
+          .select();
+
+        if (error) {
+          alert("Error: " + error.message);
+        }
+
         return data;
       } else {
-        console.log("inside others");
-        
         const { data, error } = await supabase
           .from("event_guests")
           .update({ status: newStatus })
           .eq("id", inviteId)
           .select();
-  
+
         if (error) {
           alert("Error: " + error.message);
         }
-        
+
         return data;
       }
     },

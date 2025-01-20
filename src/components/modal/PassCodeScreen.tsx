@@ -30,7 +30,7 @@ const PassCodeScreen = ({
         <View className="flex-1 justify-center items-center">
           <View className="bg-[#898989] p-6 rounded-lg">
             <QRCode
-              value={`Entry accepted!, ${passCode}`}
+              value={`${passCode}`}
               size={200}
               enableLinearGradient={true}
               linearGradient={["rgba(0,0,0,1)", "rgba(255,102,0,1)", "rgba(189,100,5,1)"]}

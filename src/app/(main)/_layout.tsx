@@ -32,6 +32,19 @@ const MainLayout = () => {
               headerTitle: "",
             }}
           />
+          <Stack.Screen
+            name="eventAcceptedGuest/[eventIdForGuests]"
+            options={{
+              headerShown: true,
+              // headerTransparent: true,
+              headerStyle: {
+                backgroundColor: "#1e1e1e",
+              },
+              headerShadowVisible: false,
+              headerTintColor: "#fff",
+              headerTitle: "Passcodes",
+            }}
+          />
         </Stack>
       </NotificationProvider>
     </QueryClientProvider>

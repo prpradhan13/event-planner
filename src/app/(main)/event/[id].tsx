@@ -7,7 +7,7 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useMemo, useState } from "react";
-import { useLocalSearchParams } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 import getInitialLetter from "@/src/utils/initialLetter";
 import LoadData from "@/src/components/smallHelping/LoadData";
 import { LinearGradient } from "expo-linear-gradient";
@@ -35,9 +35,14 @@ import EntryStatusUpdateAlert from "@/src/components/smallHelping/EntryStatusUpd
 import EntryPassCodeBtn from "@/src/components/smallHelping/EntryPassCodeBtn";
 
 const SingleEvent = () => {
-  const [selectedEventImage, setSelectedEventImage] = useState<string | null>(null);
-  const [selectedEventToUpdatePublic, setSelectedEventToUpdatePublic] = useState<number | null>(null);
-  const [selectedEventToUpdateEntry, setSelectedEventToUpdateEntry] = useState<number | null>(null);
+  const [selectedEventImage, setSelectedEventImage] = useState<string | null>(
+    null
+  );
+  const [selectedEventToUpdatePublic, setSelectedEventToUpdatePublic] =
+    useState<number | null>(null);
+  const [selectedEventToUpdateEntry, setSelectedEventToUpdateEntry] = useState<
+    number | null
+  >(null);
   const [requestToEnter, setRequestToEnter] = useState(false);
   const [requestReject, setrequestReject] = useState(false);
 
@@ -151,7 +156,7 @@ const SingleEvent = () => {
         <EventPageBtn
           onPress={handleRenderedBtnPress}
           btnName="request for entry"
-          />
+        />
       );
   };
 
@@ -205,14 +210,25 @@ const SingleEvent = () => {
 
         <View className="mt-5">
           {eventCreaterData?.id === user?.id && (
-            <Pressable
-              onPress={() => setSelectedEventToUpdatePublic(data?.id!)}
-              className="border border-BorderColor rounded-md w-36 py-1"
-            >
-              <Text className="text-white text-center">
-                {data?.ispublic ? "Public Event" : "Private Event"}
-              </Text>
-            </Pressable>
+            <View className="flex-row gap-3">
+              <Pressable
+                onPress={() => setSelectedEventToUpdatePublic(data?.id!)}
+                className="border border-BorderColor rounded-md w-36 py-1"
+              >
+                <Text className="text-white text-center">
+                  {data?.ispublic ? "Public Event" : "Private Event"}
+                </Text>
+              </Pressable>
+
+              <Link
+                href={`/eventAcceptedGuest/${data?.id}`}
+                asChild
+              >
+                <Pressable className="bg-SecondaryTextColor items-center justify-center px-3 py-1 rounded-md">
+                  <Entypo name="camera" size={20} color="black" />
+                </Pressable>
+              </Link>
+            </View>
           )}
 
           <View className="flex-row gap-3 items-center mt-2">
@@ -280,9 +296,7 @@ const SingleEvent = () => {
           )}
 
           {userInGuestList?.entry_pass_code && (
-            <EntryPassCodeBtn 
-              passCode={userInGuestList?.entry_pass_code}
-            />
+            <EntryPassCodeBtn passCode={userInGuestList?.entry_pass_code} />
           )}
         </View>
 
@@ -369,7 +383,7 @@ const SingleEvent = () => {
       )}
 
       {selectedEventToUpdateEntry && (
-        <EntryStatusUpdateAlert 
+        <EntryStatusUpdateAlert
           selectedEventId={selectedEventToUpdateEntry}
           setSelectedEventToUpdateEntry={setSelectedEventToUpdateEntry}
           entryStatus={data?.entry_status!}

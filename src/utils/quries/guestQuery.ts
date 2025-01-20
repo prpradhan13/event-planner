@@ -115,3 +115,22 @@ export const removeGuest = (setInvitationReject: Dispatch<SetStateAction<boolean
     }
   })
 }
+
+export const getOnlyPassCodes = (eventId: number) => {
+
+  return useQuery({
+    queryKey: [`passCodesForEvent_${eventId}`],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("event_guests")
+        .select("entry_pass_code")
+        .eq("event_id", eventId);
+
+      if (error) {
+        alert("Error" + error.message);
+      }
+
+      return data;
+    }
+  })
+};
