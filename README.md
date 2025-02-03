@@ -23,7 +23,7 @@ Event Planner is a robust application designed to simplify the process of organi
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/username/event-planner.git
+   git clone https://github.com/prpradhan13/event-planner.git
    ```
 2. Navigate to the project directory:
    ```bash

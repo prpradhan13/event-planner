@@ -84,7 +84,7 @@ const signUp = () => {
       <View className="w-full mt-10 p- rounded-lg">
         {/* Full name */}
         <View>
-          <Text className="text-[#dfdfdf] mb-2">Email</Text>
+          <Text className="text-[#dfdfdf] mb-2">Full Name</Text>
           <View className="flex-row items-center gap-2 border border-[#5e5e5e] rounded-lg py-2 px-3">
             <TextInput
               placeholder="Enter your full name"
